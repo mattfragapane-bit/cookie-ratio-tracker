@@ -413,7 +413,12 @@ else if(view===‘compare’)html+=compareHTML();
 document.getElementById(‘content’).innerHTML=html;
 }
 
+try {
 render();
+} catch(e) {
+document.getElementById(‘content’).innerHTML = ‘<div style="padding:1rem;color:red;font-size:0.8rem;background:#fff;margin:1rem;border-radius:4px;border:1px solid red;"><strong>JS Error:</strong> ’ + e.message + ‘<br><br>’ + (e.stack||’’).replace(/</g,’<’).replace(/
+/g,’<br>’) + ‘</div>’;
+}
 </script>
 
 </body>

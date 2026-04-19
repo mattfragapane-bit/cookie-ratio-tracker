@@ -8,154 +8,144 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 body{background:#f5f0e8;font-family:monospace;min-height:100vh;padding-bottom:3rem;}
-input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{opacity:1;}
-.app{background:#f5f0e8;min-height:100vh;background-image:radial-gradient(ellipse at 20% 0%,rgba(139,69,19,0.06) 0%,transparent 50%);}
-.header{text-align:center;padding:1.5rem 1rem 1.25rem;border-bottom:1px solid #ddd5c5;}
+input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{opacity:1;}
+.app{min-height:100vh;background:#f5f0e8;}
+.hdr{text-align:center;padding:1.5rem 1rem 1.25rem;border-bottom:1px solid #ddd5c5;}
 .eyebrow{font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:#d4956a;margin-bottom:0.4rem;}
 h1{font-family:Georgia,serif;font-size:clamp(1.4rem,4vw,1.9rem);font-weight:400;color:#1a1714;}
-h1 em{color:#8b4513;font-style:italic;}
 .rule{width:40px;height:2px;background:#8b4513;margin:0.75rem auto 0;}
 .tabs{display:flex;border-bottom:1px solid #ddd5c5;background:#fff;}
 .tab{flex:1;padding:0.75rem 0.5rem;background:none;border:none;border-bottom:2px solid transparent;color:#7a7065;font-family:monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;}
-.tab.active{border-bottom:2px solid #8b4513;color:#8b4513;}
+.tab.on{border-bottom-color:#8b4513;color:#8b4513;}
 .tab:disabled{color:#c8b99a;cursor:not-allowed;}
-.transfer-bar{text-align:right;padding:0.4rem 1rem;background:#fff;border-bottom:1px solid #ddd5c5;}
-.transfer-link{background:none;border:none;color:#c8b99a;font-family:monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;text-decoration:underline;}
-.transfer-link.active{color:#8b4513;}
-.content{max-width:700px;margin:0 auto;padding:1.25rem 1rem 0;}
+.tbar{text-align:right;padding:0.4rem 1rem;background:#fff;border-bottom:1px solid #ddd5c5;}
+.tlink{background:none;border:none;color:#c8b99a;font-family:monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;text-decoration:underline;}
+.tlink.on{color:#8b4513;}
+.wrap{max-width:700px;margin:0 auto;padding:1.25rem 1rem 0;}
 .card{background:#fff;border:1px solid #ddd5c5;border-radius:4px;padding:1.25rem 1.5rem;margin-bottom:1.25rem;}
-.card-dark{background:#1a1714;border-radius:4px;padding:0.85rem 1.25rem;margin-bottom:1.25rem;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0.5rem;}
+.dark{background:#1a1714;border-radius:4px;padding:0.85rem 1.25rem;margin-bottom:1.25rem;display:grid;grid-template-columns:repeat(4,1fr);gap:0.5rem;}
 .sl{font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:#8b4513;margin-bottom:1rem;display:flex;align-items:center;gap:0.6rem;}
-.sl::after{content:'';flex:1;height:1px;background:#ddd5c5;}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0.85rem;}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;}
-.grid2b{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem;}
-.field{display:flex;flex-direction:column;gap:0.3rem;}
-.field label{font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:#7a7065;display:flex;justify-content:space-between;}
-.field label span{font-style:italic;text-transform:none;letter-spacing:0;color:#c8b99a;font-size:0.55rem;}
-.input-wrap{display:flex;border:1px solid #ddd5c5;border-radius:3px;overflow:hidden;background:#fff;}
-.input-wrap input{flex:1;padding:0.5rem 0.6rem;border:none;background:transparent;font-family:monospace;font-size:0.82rem;color:#1a1714;outline:none;width:100%;}
-.input-wrap .unit{padding:0 0.55rem;font-size:0.6rem;color:#c8b99a;background:#f5f0e8;border-left:1px solid #ddd5c5;display:flex;align-items:center;white-space:nowrap;}
-.input-wrap select{padding:0 0.35rem;border:none;border-left:1px solid #ddd5c5;background:#f5f0e8;font-family:monospace;font-size:0.58rem;color:#c8b99a;outline:none;cursor:pointer;}
-.mixins-sep{margin-top:1rem;padding-top:1rem;border-top:1px dashed #ddd5c5;}
-.summary-item{text-align:center;}
-.summary-val{font-family:Georgia,serif;font-size:1.1rem;color:#d4956a;display:block;}
-.summary-label{font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:#c8b99a;margin-top:0.2rem;display:block;}
-.ratio-card{background:#fff;border:1px solid #ddd5c5;border-radius:4px;padding:1.1rem 1.25rem;margin-bottom:0.65rem;}
-.ratio-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.4rem;}
-.ratio-label{font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:#8b4513;margin-bottom:0.2rem;}
-.ratio-name{font-family:Georgia,serif;font-size:0.95rem;color:#1a1714;}
-.ratio-val{font-size:1.3rem;font-weight:500;color:#8b4513;letter-spacing:-0.02em;}
-.ratio-val span{font-size:0.65rem;color:#7a7065;font-weight:300;}
-.ratio-desc{font-size:0.63rem;color:#7a7065;line-height:1.6;margin-bottom:0.6rem;}
-.bar-wrap{position:relative;height:6px;background:#f5f0e8;border-radius:99px;margin-bottom:0.25rem;}
-.bar-track{position:absolute;inset:0;border-radius:99px;overflow:hidden;}
-.bar-fill{height:100%;border-radius:99px;transition:width 0.5s cubic-bezier(0.34,1.56,0.64,1);}
-.bar-marker{position:absolute;top:-3px;width:2px;height:12px;background:#ddd5c5;transform:translateX(-50%);}
-.bar-labels{display:flex;justify-content:space-between;font-size:0.55rem;color:#c8b99a;margin-bottom:0.4rem;}
-.status-tag{display:inline-block;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.12rem 0.45rem;border-radius:2px;font-weight:500;}
-.profile-text{font-size:0.72rem;line-height:1.9;color:#1a1714;}
-.profile-text p{margin-bottom:0.6rem;}
-.profile-text p:last-child{margin-bottom:0;}
-.profile-text strong{color:#8b4513;}
-.profile-empty{font-size:0.68rem;color:#c8b99a;font-style:italic;text-align:center;}
+.sl::after{content:"";flex:1;height:1px;background:#ddd5c5;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:0.85rem;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;}
+.g2b{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem;}
+.fld{display:flex;flex-direction:column;gap:0.3rem;}
+.fld label{font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:#7a7065;display:flex;justify-content:space-between;}
+.fld label span{font-style:italic;text-transform:none;letter-spacing:0;color:#c8b99a;font-size:0.55rem;}
+.iw{display:flex;border:1px solid #ddd5c5;border-radius:3px;overflow:hidden;background:#fff;}
+.iw input{flex:1;padding:0.5rem 0.6rem;border:none;background:transparent;font-family:monospace;font-size:0.82rem;color:#1a1714;outline:none;width:100%;}
+.iw .u{padding:0 0.55rem;font-size:0.6rem;color:#c8b99a;background:#f5f0e8;border-left:1px solid #ddd5c5;display:flex;align-items:center;white-space:nowrap;}
+.iw select{padding:0 0.35rem;border:none;border-left:1px solid #ddd5c5;background:#f5f0e8;font-family:monospace;font-size:0.58rem;color:#c8b99a;outline:none;cursor:pointer;}
+.msep{margin-top:1rem;padding-top:1rem;border-top:1px dashed #ddd5c5;}
+.sv{text-align:center;}
+.sv span{font-family:Georgia,serif;font-size:1.1rem;color:#d4956a;display:block;}
+.sv small{font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:#c8b99a;margin-top:0.2rem;display:block;}
+.rc{background:#fff;border:1px solid #ddd5c5;border-radius:4px;padding:1.1rem 1.25rem;margin-bottom:0.65rem;}
+.rl{font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:#8b4513;margin-bottom:0.2rem;}
+.rn{font-family:Georgia,serif;font-size:0.95rem;color:#1a1714;}
+.rv{font-size:1.3rem;font-weight:500;color:#8b4513;letter-spacing:-0.02em;}
+.rv span{font-size:0.65rem;color:#7a7065;font-weight:300;}
+.rdesc{font-size:0.63rem;color:#7a7065;line-height:1.6;margin-bottom:0.6rem;}
+.bw{position:relative;height:6px;background:#f5f0e8;border-radius:99px;margin-bottom:0.25rem;}
+.bt{position:absolute;inset:0;border-radius:99px;overflow:hidden;}
+.bf{height:100%;border-radius:99px;transition:width 0.5s cubic-bezier(0.34,1.56,0.64,1);}
+.bm{position:absolute;top:-3px;width:2px;height:12px;background:#ddd5c5;transform:translateX(-50%);}
+.bl{display:flex;justify-content:space-between;font-size:0.55rem;color:#c8b99a;margin-bottom:0.4rem;}
+.st{display:inline-block;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.12rem 0.45rem;border-radius:2px;font-weight:500;}
+.pt{font-size:0.72rem;line-height:1.9;color:#1a1714;}
+.pt p{margin-bottom:0.6rem;}
+.pt p:last-child{margin-bottom:0;}
+.pt strong{color:#8b4513;}
+.pe{font-size:0.68rem;color:#c8b99a;font-style:italic;text-align:center;}
 textarea{width:100%;min-height:80px;border:1px solid #ddd5c5;border-radius:3px;padding:0.6rem;font-family:monospace;font-size:0.72rem;color:#1a1714;background:#f5f0e8;resize:vertical;outline:none;line-height:1.7;box-sizing:border-box;}
-.save-btn{width:100%;padding:0.85rem;border:none;border-radius:4px;color:#fff;font-family:monospace;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background 0.3s;}
-.recipe-item{background:#fff;border:1px solid #ddd5c5;border-radius:4px;padding:1rem 1.25rem;margin-bottom:0.65rem;display:flex;align-items:flex-start;gap:0.75rem;}
-.recipe-item.active{border-color:#d4956a;}
-.recipe-tags{display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:0.35rem;}
+.sbtn{width:100%;padding:0.85rem;border:none;border-radius:4px;color:#fff;font-family:monospace;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background 0.3s;}
+.ri{background:#fff;border:1px solid #ddd5c5;border-radius:4px;padding:1rem 1.25rem;margin-bottom:0.65rem;display:flex;align-items:flex-start;gap:0.75rem;}
+.ri.on{border-color:#d4956a;}
+.rtags{display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:0.35rem;}
 .tag{font-size:0.57rem;background:#f5f0e8;color:#7a7065;padding:0.1rem 0.4rem;border-radius:2px;}
-.tag.profile{color:#8b4513;font-weight:500;}
-.new-btn{width:100%;padding:0.65rem;background:none;border:1px dashed #c8b99a;border-radius:4px;color:#7a7065;font-family:monospace;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;margin-bottom:1rem;}
-.compare-btn{width:100%;padding:0.75rem;background:#8b4513;border:none;border-radius:4px;color:#fff;font-family:monospace;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;margin-top:0.5rem;}
-.legend{background:#fff;border:1px solid #ddd5c5;border-radius:4px;padding:0.85rem 1.25rem;margin-bottom:1.25rem;display:flex;flex-wrap:wrap;gap:0.6rem;}
-.legend-item{display:flex;align-items:center;gap:0.4rem;}
-.legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
-.legend-name{font-size:0.62rem;color:#1a1714;}
-.compare-card{background:#fff;border:1px solid #ddd5c5;border-radius:4px;padding:1rem 1.25rem;margin-bottom:0.65rem;}
-.compare-row{margin-bottom:0.55rem;}
-.compare-row-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.2rem;}
-.compare-row-name{font-size:0.6rem;color:#7a7065;display:flex;align-items:center;gap:0.35rem;}
-.compare-dot{width:8px;height:8px;border-radius:1px;display:inline-block;flex-shrink:0;}
-.compare-row-val{font-size:0.65rem;font-weight:500;color:#8b4513;}
-.compare-bar{position:relative;height:8px;background:#f5f0e8;border-radius:99px;}
-.compare-bar-fill{height:100%;border-radius:99px;}
-.compare-marker{position:absolute;top:-2px;width:1px;height:12px;background:#ddd5c5;transform:translateX(-50%);}
-.transfer-panel{background:#fff;border:1px solid #ddd5c5;border-radius:4px;padding:1.25rem 1.5rem;margin-bottom:1.25rem;}
-.transfer-btns{display:flex;gap:0.6rem;margin-bottom:0.75rem;}
-.transfer-export{flex:1;padding:0.55rem;background:#f5f0e8;border:1px solid #ddd5c5;border-radius:3px;font-family:monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;color:#1a1714;}
-.transfer-import{flex:1;padding:0.55rem;border:none;border-radius:3px;font-family:monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:#fff;}
-.transfer-msg{font-size:0.65rem;color:#5a7a4a;margin-top:0.5rem;}
-.transfer-textarea{width:100%;min-height:120px;border:1px solid #ddd5c5;border-radius:3px;padding:0.6rem;font-family:monospace;font-size:0.65rem;color:#1a1714;background:#f5f0e8;resize:vertical;outline:none;line-height:1.6;box-sizing:border-box;}
+.tag.p{color:#8b4513;font-weight:500;}
+.nbtn{width:100%;padding:0.65rem;background:none;border:1px dashed #c8b99a;border-radius:4px;color:#7a7065;font-family:monospace;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;margin-bottom:1rem;}
+.cbtn{width:100%;padding:0.75rem;background:#8b4513;border:none;border-radius:4px;color:#fff;font-family:monospace;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;margin-top:0.5rem;}
+.leg{background:#fff;border:1px solid #ddd5c5;border-radius:4px;padding:0.85rem 1.25rem;margin-bottom:1.25rem;display:flex;flex-wrap:wrap;gap:0.6rem;}
+.li{display:flex;align-items:center;gap:0.4rem;}
+.ld{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+.cc{background:#fff;border:1px solid #ddd5c5;border-radius:4px;padding:1rem 1.25rem;margin-bottom:0.65rem;}
+.cr{margin-bottom:0.55rem;}
+.crh{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.2rem;}
+.crn{font-size:0.6rem;color:#7a7065;display:flex;align-items:center;gap:0.35rem;}
+.cd{width:8px;height:8px;border-radius:1px;display:inline-block;flex-shrink:0;}
+.crv{font-size:0.65rem;font-weight:500;color:#8b4513;}
+.cb{position:relative;height:8px;background:#f5f0e8;border-radius:99px;}
+.cbf{height:100%;border-radius:99px;}
+.cm{position:absolute;top:-2px;width:1px;height:12px;background:#ddd5c5;transform:translateX(-50%);}
+.tp{background:#fff;border:1px solid #ddd5c5;border-radius:4px;padding:1.25rem 1.5rem;margin-bottom:1.25rem;}
+.tbtns{display:flex;gap:0.6rem;margin-bottom:0.75rem;}
+.te{flex:1;padding:0.55rem;background:#f5f0e8;border:1px solid #ddd5c5;border-radius:3px;font-family:monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;color:#1a1714;}
+.ti{flex:1;padding:0.55rem;border:none;border-radius:3px;font-family:monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:#fff;}
+.tm{font-size:0.65rem;color:#5a7a4a;margin-top:0.5rem;}
+.tta{width:100%;min-height:120px;border:1px solid #ddd5c5;border-radius:3px;padding:0.6rem;font-family:monospace;font-size:0.65rem;color:#1a1714;background:#f5f0e8;resize:vertical;outline:none;line-height:1.6;box-sizing:border-box;}
 .empty{text-align:center;padding:3rem 1rem;color:#c8b99a;font-size:0.75rem;font-style:italic;}
-@media(max-width:500px){.grid2{grid-template-columns:1fr;}.grid3{grid-template-columns:1fr 1fr;}}
+@media(max-width:500px){.g2{grid-template-columns:1fr;}.g3{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
 <body>
-<div class="app" id="app">
-<div class="header">
+<div class="app">
+<div class="hdr">
   <div class="eyebrow">Baker's Ratio Tracker</div>
-  <h1>Chocolate Chip <em>Cookie</em> Ratios</h1>
+  <h1>Chocolate Chip <em style="color:#8b4513;font-style:italic;">Cookie</em> Ratios</h1>
   <div class="rule"></div>
 </div>
 <div class="tabs" id="tabs"></div>
-<div class="transfer-bar">
-  <button class="transfer-link" id="transferToggle" onclick="toggleTransfer()">Export / Import recipes</button>
-</div>
-<div class="content" id="content"></div>
+<div class="tbar"><button class="tlink" id="tlink" onclick="toggleT()">Export / Import recipes</button></div>
+<div class="wrap" id="wrap"></div>
 </div>
 <script>
-var ACCENT='#8b4513',ACCENT_LIGHT='#d4956a',GOOD='#5a7a4a',WARN='#c17f24',ALERT='#9b3a2a',WARM_MID='#c8b99a',PARCHMENT='#f5f0e8';
-var COMPARE_COLORS=[ACCENT_LIGHT,'#6b8b6b','#c8a44a','#8b6b3a','#a0714a','#4a3020'];
-
+var A='#8b4513',AL='#d4956a',G='#5a7a4a',W='#c17f24',E='#9b3a2a',M='#c8b99a',P='#f5f0e8';
+var CC=[AL,'#6b8b6b','#c8a44a','#8b6b3a','#a0714a','#4a3020'];
 var RATIOS=[
-{key:‘fat’,label:‘Fat’,name:‘Butter to Flour’,color:ACCENT_LIGHT,max:100,t:[20,50,80,95],m:[40,65,80],ml:[‘lean’,‘classic’,‘rich’],desc:‘Controls spread, richness, and chew. Higher fat = thinner, crispier, more flavourful. Lower fat = thicker, cakier, more structured.’},
-{key:‘sugar’,label:‘Sugar’,name:‘Total Sugar to Flour’,color:’#c8a44a’,max:120,t:[20,55,90,110],m:[40,65,90],ml:[‘mild’,‘classic’,‘sweet’],desc:‘Drives sweetness, spread, and browning. Very high sugar = thin, lacey, crispy. Brown sugar adds moisture; white encourages spread and snap.’},
-{key:‘brown’,label:‘Brown Sugar’,name:‘Brown vs White Split’,color:’#a0714a’,max:100,t:[10,40,75,90],m:[33,60,80],ml:[‘crunchy’,‘balanced’,‘chewy’],desc:‘Brown sugar retains moisture for chew and caramel notes. White promotes spread and crunch.’},
-{key:‘egg’,label:‘Egg’,name:‘Eggs to Flour’,color:’#8b6b3a’,max:80,t:[15,30,55,70],m:[25,45,65],ml:[‘lean’,‘standard’,‘rich’],desc:‘Whites provide structure; yolks provide richness. Extra yolks = fudgy, dense. High whites = puffier, more cakey.’},
-{key:‘bicarb’,label:‘Baking Soda’,name:‘Baking Soda to Flour’,color:’#6b8b6b’,max:3,t:[0.3,0.8,1.4,2.0],m:[25,55,80],ml:[‘low’,‘ideal’,‘high’],desc:‘Needs an acid to activate (brown sugar, cream, buttermilk). Drives Maillard browning, spread, and crispier edges. Too much = soapy off-notes.’},
-{key:‘bpowder’,label:‘Baking Powder’,name:‘Baking Powder to Flour’,color:’#8b9b6b’,max:3,t:[0.2,0.6,1.2,1.8],m:[20,50,75],ml:[‘low’,‘typical’,‘high’],desc:‘Self-contained leavener (acid + base). Gives a cleaner, more neutral lift. Promotes height over spread. More common in cakey-style cookies.’},
-{key:‘choc’,label:‘Chocolate’,name:‘Chocolate to Flour’,color:’#4a3020’,max:160,t:[10,50,120,150],m:[30,55,80],ml:[‘light’,‘generous’,‘loaded’],desc:‘Higher ratios produce pooling chocolate. Very high loads (120%+) make chocolate structural, not just a mix-in.’}
+ {k:'fat',lb:'Fat',nm:'Butter to Flour',cl:AL,mx:100,t:[20,50,80,95],m:[40,65,80],ml:['lean','classic','rich'],d:'Controls spread, richness, and chew. Higher fat = thinner, crispier, more flavourful. Lower fat = thicker, cakier, more structured.'},
+ {k:'sugar',lb:'Sugar',nm:'Total Sugar to Flour',cl:'#c8a44a',mx:120,t:[20,55,90,110],m:[40,65,90],ml:['mild','classic','sweet'],d:'Drives sweetness, spread, and browning. Very high sugar = thin, lacey, crispy. Brown sugar adds moisture; white encourages spread and snap.'},
+ {k:'brown',lb:'Brown Sugar',nm:'Brown vs White Split',cl:'#a0714a',mx:100,t:[10,40,75,90],m:[33,60,80],ml:['crunchy','balanced','chewy'],d:'Brown sugar retains moisture for chew and caramel notes. White promotes spread and crunch.'},
+ {k:'egg',lb:'Egg',nm:'Eggs to Flour',cl:'#8b6b3a',mx:80,t:[15,30,55,70],m:[25,45,65],ml:['lean','standard','rich'],d:'Whites provide structure; yolks provide richness. Extra yolks = fudgy, dense. High whites = puffier, more cakey.'},
+ {k:'bicarb',lb:'Baking Soda',nm:'Baking Soda to Flour',cl:'#6b8b6b',mx:3,t:[0.3,0.8,1.4,2.0],m:[25,55,80],ml:['low','ideal','high'],d:'Needs an acid to activate. Drives Maillard browning, spread, and crispier edges. Too much = soapy off-notes.'},
+ {k:'bpowder',lb:'Baking Powder',nm:'Baking Powder to Flour',cl:'#8b9b6b',mx:3,t:[0.2,0.6,1.2,1.8],m:[20,50,75],ml:['low','typical','high'],d:'Self-contained leavener. Gives a cleaner, more neutral lift. Promotes height over spread. More common in cakey-style cookies.'},
+ {k:'choc',lb:'Chocolate',nm:'Chocolate to Flour',cl:'#4a3020',mx:160,t:[10,50,120,150],m:[30,55,80],ml:['light','generous','loaded'],d:'Higher ratios produce pooling chocolate. Very high loads (120%+) make chocolate structural, not just a mix-in.'}
 ];
+var EMP={flour:'',butter:'',brownSugar:'',whiteSugar:'',eggs:'',yolks:'',choc:'',bicarb:'',bicarbUnit:'tsp',bakingPowder:'',bakingPowderUnit:'tsp',salt:'',saltUnit:'tsp',cream:''};
+var TG={bicarb:6,bakingPowder:4,salt:6};
 
-var EMPTY={flour:’’,butter:’’,brownSugar:’’,whiteSugar:’’,eggs:’’,yolks:’’,choc:’’,bicarb:’’,bicarbUnit:‘tsp’,bakingPowder:’’,bakingPowderUnit:‘tsp’,salt:’’,saltUnit:‘tsp’,cream:’’};
-var TSP_G={bicarb:6,bakingPowder:4,salt:6};
+var view=‘editor’,recipes=[],fields=cp(EMP),rname=’’,rnotes=’’,eid=null,cids=[],saved=false,showT=false,ttext=’’,tmsg=’’;
 
-var view=‘editor’, recipes=[], fields=obj(EMPTY), recipeName=’’, recipeNotes=’’, editingId=null, compareIds=[], saved=false, showTransfer=false, transferText=’’, transferMsg=’’;
+function cp(o){return JSON.parse(JSON.stringify(o));}
+function ls(k){try{var v=localStorage.getItem(k);return v?JSON.parse(v):null;}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+var stored=ls(‘cct2’);if(stored)recipes=stored;
 
-function obj(o){return JSON.parse(JSON.stringify(o));}
-try{var s=localStorage.getItem(‘cct-recipes’);if(s)recipes=JSON.parse(s);}catch(e){}
-function store(r){try{localStorage.setItem(‘cct-recipes’,JSON.stringify(r));}catch(e){}}
-
-function toG(v,u,k){if(u===‘tsp’)return v*TSP_G[k];if(u===‘tbsp’)return v*TSP_G[k]*3;return v;}
-function nf(f,k){var v=parseFloat((f||{})[k]);return isNaN(v)||v<0?0:v;}
+function toG(v,u,k){if(u===‘tsp’)return v*TG[k];if(u===‘tbsp’)return v*TG[k]*3;return v;}
+function nf(f,k){var v=parseFloat(f[k]);return isNaN(v)||v<0?0:v;}
 function pct(a,b){return b?(a/b)*100:null;}
 
 function calc(f){
-var flour=nf(f,‘flour’),butter=nf(f,‘butter’),bs=nf(f,‘brownSugar’),ws=nf(f,‘whiteSugar’);
-var eggs=nf(f,‘eggs’),yolks=nf(f,‘yolks’),choc=nf(f,‘choc’),cream=nf(f,‘cream’);
-var bicarbU=f.bicarbUnit||‘tsp’,bpU=f.bakingPowderUnit||‘tsp’,saltU=f.saltUnit||‘tsp’;
-var bicarbG=toG(nf(f,‘bicarb’),bicarbU,‘bicarb’);
-var bpG=toG(nf(f,‘bakingPowder’),bpU,‘bakingPowder’);
-var saltG=toG(nf(f,‘salt’),saltU,‘salt’);
-var totalSugar=bs+ws,totalEgg=eggs*50+yolks*18,leavenG=bicarbG+bpG;
-return {flour:flour,butter:butter,totalSugar:totalSugar,totalEgg:totalEgg,leavenG:leavenG,saltG:saltG,bicarbG:bicarbG,bpG:bpG,choc:choc,cream:cream,
-fat:pct(butter,flour),sugar:pct(totalSugar,flour),
-brown:totalSugar>0?pct(bs,totalSugar):null,
-egg:pct(totalEgg,flour),bicarb:pct(bicarbG,flour),bpowder:pct(bpG,flour),
-chocPct:pct(choc,flour),hasExtraYolks:yolks>0};
+var fl=nf(f,‘flour’),bu=nf(f,‘butter’),bs=nf(f,‘brownSugar’),ws=nf(f,‘whiteSugar’);
+var eg=nf(f,‘eggs’),yo=nf(f,‘yolks’),ch=nf(f,‘choc’),cr=nf(f,‘cream’);
+var bU=f.bicarbUnit||‘tsp’,pU=f.bakingPowderUnit||‘tsp’,sU=f.saltUnit||‘tsp’;
+var bG=toG(nf(f,‘bicarb’),bU,‘bicarb’),pG=toG(nf(f,‘bakingPowder’),pU,‘bakingPowder’),sG=toG(nf(f,‘salt’),sU,‘salt’);
+var ts=bs+ws,te=eg*50+yo*18,lG=bG+pG;
+return{fl:fl,bu:bu,ts:ts,te:te,lG:lG,sG:sG,bG:bG,pG:pG,ch:ch,cr:cr,
+fat:pct(bu,fl),sugar:pct(ts,fl),brown:ts>0?pct(bs,ts):null,
+egg:pct(te,fl),bicarb:pct(bG,fl),bpowder:pct(pG,fl),choc:pct(ch,fl),xyo:yo>0};
 }
 
-function getStatus(v,t){
-if(v===null)return {label:’–’,color:WARM_MID,bg:PARCHMENT};
-if(v<t[0])return {label:‘Low’,color:ALERT,bg:‘rgba(155,58,42,0.1)’};
-if(v<t[1])return {label:‘Below typical’,color:ALERT,bg:‘rgba(155,58,42,0.1)’};
-if(v<=t[2])return {label:‘Typical range’,color:GOOD,bg:‘rgba(90,122,74,0.1)’};
-if(v<=t[3])return {label:‘Above typical’,color:WARN,bg:‘rgba(193,127,36,0.1)’};
-return {label:‘High’,color:WARN,bg:‘rgba(193,127,36,0.1)’};
+function status(v,t){
+if(v===null)return{lb:’–’,cl:M,bg:P};
+if(v<t[0])return{lb:‘Low’,cl:E,bg:‘rgba(155,58,42,0.1)’};
+if(v<t[1])return{lb:‘Below typical’,cl:E,bg:‘rgba(155,58,42,0.1)’};
+if(v<=t[2])return{lb:‘Typical range’,cl:G,bg:‘rgba(90,122,74,0.1)’};
+if(v<=t[3])return{lb:‘Above typical’,cl:W,bg:‘rgba(193,127,36,0.1)’};
+return{lb:‘High’,cl:W,bg:‘rgba(193,127,36,0.1)’};
 }
 
-function getProfile(r){
+function profile(r){
 if(!r.fat)return ‘–’;
 if(r.fat>=70&&r.brown>=60&&r.egg>=40)return ‘Fudgy’;
 if(r.fat<=55&&r.sugar>=80)return ‘Crispy’;
@@ -164,261 +154,287 @@ if(r.fat<=55&&r.egg>=55)return ‘Cakey’;
 return ‘Balanced’;
 }
 
-function buildProfile(r){
-if(!r.flour)return ‘<p class="profile-empty">Enter ingredient weights above to generate a profile reading.</p>’;
+function el(tag,cls,txt){var e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e;}
+function div(cls){return el(‘div’,cls);}
+
+function mkSL(txt){var d=div(‘sl’);d.textContent=txt;return d;}
+
+function mkInput(id,label,hint,ph,unit,step){
+var wrap=div(‘fld’);
+var lbl=document.createElement(‘label’);lbl.textContent=label;
+if(hint){var sp=document.createElement(‘span’);sp.textContent=hint;lbl.appendChild(sp);}
+wrap.appendChild(lbl);
+var iw=div(‘iw’);
+var inp=document.createElement(‘input’);
+inp.type=‘number’;inp.min=‘0’;inp.step=step||‘1’;inp.placeholder=ph;
+inp.value=fields[id]||’’;
+inp.setAttribute(‘data-id’,id);
+inp.addEventListener(‘input’,function(){fields[this.getAttribute(‘data-id’)]=this.value;saved=false;render();});
+iw.appendChild(inp);
+var u=div(‘u’);u.textContent=unit||(id===‘eggs’||id===‘yolks’?‘ct’:‘g’);
+iw.appendChild(u);wrap.appendChild(iw);return wrap;
+}
+
+function mkSmall(id,uid,label){
+var wrap=div(‘fld’);
+var lbl=document.createElement(‘label’);lbl.textContent=label;wrap.appendChild(lbl);
+var iw=div(‘iw’);
+var u=fields[uid]||‘tsp’;
+var inp=document.createElement(‘input’);
+inp.type=‘number’;inp.min=‘0’;inp.step=‘0.25’;inp.placeholder=u===‘g’?‘4’:‘1’;
+inp.value=fields[id]||’’;
+inp.setAttribute(‘data-id’,id);
+inp.addEventListener(‘input’,function(){fields[this.getAttribute(‘data-id’)]=this.value;saved=false;render();});
+iw.appendChild(inp);
+var sel=document.createElement(‘select’);
+[‘tsp’,‘tbsp’,‘g’].forEach(function(v){var o=document.createElement(‘option’);o.value=v;o.textContent=v;if(v===u)o.selected=true;sel.appendChild(o);});
+sel.setAttribute(‘data-uid’,uid);
+sel.addEventListener(‘change’,function(){fields[this.getAttribute(‘data-uid’)]=this.value;saved=false;render();});
+iw.appendChild(sel);wrap.appendChild(iw);return wrap;
+}
+
+function mkBar(r,cfg){
+var val=r[cfg.k];
+var bw=val!==null?Math.min(100,(val/cfg.mx)*100):0;
+var st=status(val,cfg.t);
+var card=div(‘rc’);
+var head=div(’’);head.style.display=‘flex’;head.style.justifyContent=‘space-between’;head.style.alignItems=‘flex-start’;head.style.marginBottom=‘0.4rem’;
+var left=div(’’);
+var rl=div(‘rl’);rl.textContent=cfg.lb;left.appendChild(rl);
+var rn=div(‘rn’);rn.textContent=cfg.nm;left.appendChild(rn);
+head.appendChild(left);
+var rv=div(‘rv’);rv.textContent=val!==null?val.toFixed(1):’–’;var sp=el(‘span’,’’,’%’);rv.appendChild(sp);
+head.appendChild(rv);card.appendChild(head);
+var desc=div(‘rdesc’);desc.textContent=cfg.d;card.appendChild(desc);
+var bwrap=div(‘bw’);
+var bt=div(‘bt’);var bf=div(‘bf’);bf.style.width=bw+’%’;bf.style.background=cfg.cl;bt.appendChild(bf);bwrap.appendChild(bt);
+cfg.m.forEach(function(m){var bm=div(‘bm’);bm.style.left=m+’%’;bwrap.appendChild(bm);});
+card.appendChild(bwrap);
+var bl=div(‘bl’);cfg.ml.forEach(function(l){var s=el(‘span’,’’,l);bl.appendChild(s);});card.appendChild(bl);
+var stag=div(‘st’);stag.textContent=st.lb;stag.style.background=st.bg;stag.style.color=st.cl;card.appendChild(stag);
+return card;
+}
+
+function mkProfile(r){
+if(!r.fl)return null;
 var lines=[];
-var fat=r.fat,brown=r.brown,egg=r.egg,bicarbG=r.bicarbG,bpG=r.bpG;
-if(fat>=75)lines.push(’<strong>Very rich fat (’+fat.toFixed(0)+’%)</strong> - generously buttery, significant spread, thin crispy edges.’);
-else if(fat>=55)lines.push(’<strong>Classic fat (’+fat.toFixed(0)+’%)</strong> - sweet spot for spread and chewy-crisp edges.’);
-else if(fat)lines.push(’<strong>Lean fat (’+fat.toFixed(0)+’%)</strong> - less spread, thicker and more structured.’);
+var fat=r.fat,brown=r.brown,egg=r.egg,bG=r.bG,pG=r.pG;
+if(fat>=75)lines.push([‘Very rich fat (’+fat.toFixed(0)+’%)’,’ - generously buttery, significant spread, thin crispy edges.’]);
+else if(fat>=55)lines.push([‘Classic fat (’+fat.toFixed(0)+’%)’,’ - sweet spot for spread and chewy-crisp edges.’]);
+else if(fat)lines.push([‘Lean fat (’+fat.toFixed(0)+’%)’,’ - less spread, thicker and more structured.’]);
 if(brown!==null){
-if(brown>=70)lines.push(’<strong>Brown sugar dominant (’+brown.toFixed(0)+’%)</strong> - deep caramel flavour, chewy moist interior.’);
-else if(brown>=45)lines.push(’<strong>Balanced sugar split (’+brown.toFixed(0)+’% brown)</strong> - depth from molasses, snap from white sugar.’);
-else lines.push(’<strong>White sugar dominant (’+(100-brown).toFixed(0)+’% white)</strong> - more spread, crunch, cleaner flavour.’);
+if(brown>=70)lines.push([‘Brown sugar dominant (’+brown.toFixed(0)+’%)’,’ - deep caramel flavour, chewy moist interior.’]);
+else if(brown>=45)lines.push([‘Balanced sugar split (’+brown.toFixed(0)+’% brown)’,’ - depth from molasses, snap from white sugar.’]);
+else lines.push([‘White sugar dominant (’+(100-brown).toFixed(0)+’% white)’,’ - more spread, crunch, cleaner flavour.’]);
 }
-if(r.hasExtraYolks)lines.push(’<strong>Extra yolks</strong> - fudgy, dense, richer golden colour.’);
-else if(egg>=55)lines.push(’<strong>High egg (’+egg.toFixed(0)+’%)</strong> - puffier, more cakey structure.’);
-else if(egg>=35)lines.push(’<strong>Standard egg (’+egg.toFixed(0)+’%)</strong> - balanced moisture and binding.’);
-if(bicarbG>0&&bpG>0)lines.push(’<strong>Dual leavening</strong> - bicarb drives browning and spread; baking powder adds neutral lift.’);
-else if(bicarbG>0){
-if(r.bicarb>1.4)lines.push(’<strong>High bicarb (’+r.bicarb.toFixed(1)+’%)</strong> - very active browning; watch for soapy off-notes.’);
-else if(r.bicarb>=0.8)lines.push(’<strong>Bicarb in range (’+r.bicarb.toFixed(1)+’%)</strong> - good Maillard browning, crispier edges.’);
-else lines.push(’<strong>Low bicarb (’+r.bicarb.toFixed(1)+’%)</strong> - minimal browning boost; denser result.’);
-}else if(bpG>0)lines.push(’<strong>Baking powder only (’+r.bpowder.toFixed(1)+’%)</strong> - neutral lift, puffier more cakey texture.’);
-if(r.chocPct>=110)lines.push(’<strong>Heavy chocolate (’+r.chocPct.toFixed(0)+’%)</strong> - bakery-style, chocolate pools dominate.’);
-else if(r.chocPct>=70)lines.push(’<strong>Generous chocolate (’+r.chocPct.toFixed(0)+’%)</strong> - every bite covered, well-balanced.’);
-else if(r.chocPct>0)lines.push(’<strong>Moderate chocolate (’+r.chocPct.toFixed(0)+’%)</strong> - dough flavour remains prominent.’);
-return lines.map(function(l){return ‘<p>’+l+’</p>’;}).join(’’);
-}
-
-function esc(s){return String(s||’’).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’"’);}
-
-function numInput(id,label,hint,placeholder,unit,step){
-var u=unit||(id===‘eggs’||id===‘yolks’?‘ct’:‘g’);
-var val=fields[id]||’’;
-return ‘<div class="field"><label>’+label+(hint?’<span>’+hint+’</span>’:’’)+’</label>’
-+’<div class="input-wrap"><input type="number" min="0" step="'+(step||1)+'" placeholder="'+placeholder+'" value="'+esc(val)+'" oninput="sf(\''+id+'\',this.value)">’
-+’<span class="unit">’+u+’</span></div></div>’;
+if(r.xyo)lines.push([‘Extra yolks’,’ - fudgy, dense, richer golden colour.’]);
+else if(egg>=55)lines.push([‘High egg (’+egg.toFixed(0)+’%)’,’ - puffier, more cakey structure.’]);
+else if(egg>=35)lines.push([‘Standard egg (’+egg.toFixed(0)+’%)’,’ - balanced moisture and binding.’]);
+if(bG>0&&pG>0)lines.push([‘Dual leavening’,’ - bicarb drives browning and spread; baking powder adds neutral lift.’]);
+else if(bG>0){
+if(r.bicarb>1.4)lines.push([‘High bicarb (’+r.bicarb.toFixed(1)+’%)’,’ - very active browning; watch for soapy off-notes.’]);
+else if(r.bicarb>=0.8)lines.push([‘Bicarb in range (’+r.bicarb.toFixed(1)+’%)’,’ - good Maillard browning, crispier edges.’]);
+else lines.push([‘Low bicarb (’+r.bicarb.toFixed(1)+’%)’,’ - minimal browning boost; denser result.’]);
+}else if(pG>0)lines.push([‘Baking powder only (’+r.bpowder.toFixed(1)+’%)’,’ - neutral lift, puffier more cakey texture.’]);
+if(r.choc>=110)lines.push([‘Heavy chocolate (’+r.choc.toFixed(0)+’%)’,’ - bakery-style, chocolate pools dominate.’]);
+else if(r.choc>=70)lines.push([‘Generous chocolate (’+r.choc.toFixed(0)+’%)’,’ - every bite covered, well-balanced.’]);
+else if(r.choc>0)lines.push([‘Moderate chocolate (’+r.choc.toFixed(0)+’%)’,’ - dough flavour remains prominent.’]);
+var wrap=div(‘pt’);
+lines.forEach(function(parts){var p=document.createElement(‘p’);var s=document.createElement(‘strong’);s.textContent=parts[0];p.appendChild(s);p.appendChild(document.createTextNode(parts[1]));wrap.appendChild(p);});
+return wrap;
 }
 
-function smallInput(id,unitId,label){
-var u=fields[unitId]||‘tsp’;
-var val=fields[id]||’’;
-var ph=u===‘g’?‘4’:‘1’;
-return ‘<div class="field"><label>’+label+’</label>’
-+’<div class="input-wrap"><input type="number" min="0" step="0.25" placeholder="'+ph+'" value="'+esc(val)+'" oninput="sf(\''+id+'\',this.value)">’
-+’<select onchange="sf(\''+unitId+'\',this.value)">’
-+’<option value=“tsp”’+(u===‘tsp’?’ selected’:’’)+’>tsp</option>’
-+’<option value=“tbsp”’+(u===‘tbsp’?’ selected’:’’)+’>tbsp</option>’
-+’<option value=“g”’+(u===‘g’?’ selected’:’’)+’>g</option>’
-+’</select></div></div>’;
-}
-
-function ratioBar(r,cfg){
-var val=r[cfg.key];
-var barW=val!==null?Math.min(100,(val/cfg.max)*100):0;
-var st=getStatus(val,cfg.t);
-var valStr=val!==null?val.toFixed(1):’–’;
-var markers=cfg.m.map(function(m){return ‘<div class="bar-marker" style="left:'+m+'%"></div>’;}).join(’’);
-var mlabels=cfg.ml.map(function(l){return ‘<span>’+l+’</span>’;}).join(’’);
-return ‘<div class="ratio-card">’
-+’<div class="ratio-head"><div><div class="ratio-label">’+cfg.label+’</div><div class="ratio-name">’+cfg.name+’</div></div>’
-+’<div class="ratio-val">’+valStr+’<span>%</span></div></div>’
-+’<div class="ratio-desc">’+cfg.desc+’</div>’
-+’<div class="bar-wrap"><div class="bar-track"><div class="bar-fill" style="width:'+barW+'%;background:'+cfg.color+'"></div></div>’+markers+’</div>’
-+’<div class="bar-labels">’+mlabels+’</div>’
-+’<span class="status-tag" style="background:'+st.bg+';color:'+st.color+'">’+st.label+’</span>’
-+’</div>’;
-}
-
-function editorHTML(){
+function renderEditor(){
+var frag=document.createDocumentFragment();
 var r=calc(fields);
-var doughTotal=r.flour+r.butter+r.totalSugar+r.totalEgg+r.leavenG+r.saltG+r.choc+r.cream;
-var brownPct=r.totalSugar>0?Math.round(pct(nf(fields,‘brownSugar’),r.totalSugar)):null;
-var saveBg=saved?GOOD:(recipeName.trim()?ACCENT:WARM_MID);
-var saveTxt=saved?‘Saved’:(editingId?‘Update Recipe’:‘Save Recipe’);
-var ratioCards=RATIOS.map(function(cfg){return ratioBar(r,cfg);}).join(’’);
-return ‘<div class="card"><div class="sl">Recipe Name</div>’
-+’<div class="input-wrap"><input type="text" placeholder="e.g. Kiley\'s CCC" value="'+esc(recipeName)+'" oninput="sn(this.value)" style="flex:1;padding:0.55rem 0.65rem;border:none;background:#f5f0e8;font-family:monospace;font-size:0.82rem;color:#1a1714;outline:none;"></div></div>’
-+’<div class="card"><div class="sl">Base Ingredients</div>’
-+’<div class="grid2">’
-+numInput(‘flour’,‘Flour’,‘base = 100%’,‘240’)
-+numInput(‘butter’,‘Butter’,‘fat’,‘170’)
-+numInput(‘brownSugar’,‘Brown Sugar’,’’,‘165’)
-+numInput(‘whiteSugar’,‘White Sugar’,’’,‘100’)
-+numInput(‘eggs’,‘Whole Eggs’,‘count’,‘2’)
-+numInput(‘yolks’,‘Egg Yolks’,‘extra, if any’,‘0’)
-+’</div>’
-+’<div class="mixins-sep"><div class="sl">Mix-ins & Leavening</div>’
-+’<div class="grid2b">’+numInput(‘choc’,‘Chocolate’,’’,‘300’)+numInput(‘cream’,‘Cream / Milk’,‘optional’,‘30’,‘ml’)+’</div>’
-+’<div class="grid3">’+smallInput(‘bicarb’,‘bicarbUnit’,‘Baking Soda’)+smallInput(‘bakingPowder’,‘bakingPowderUnit’,‘Baking Powder’)+smallInput(‘salt’,‘saltUnit’,‘Salt’)+’</div>’
-+’</div></div>’
-+’<div class="card-dark">’
-+’<div class="summary-item"><span class="summary-val">’+(doughTotal>0?Math.round(doughTotal)+‘g’:’–’)+’</span><span class="summary-label">Dough</span></div>’
-+’<div class="summary-item"><span class="summary-val">’+(brownPct!==null?brownPct+’:’+(100-brownPct):’–’)+’</span><span class="summary-label">Sugar B:W</span></div>’
-+’<div class="summary-item"><span class="summary-val">’+(r.flour&&r.choc?Math.round(r.chocPct)+’%’:’–’)+’</span><span class="summary-label">Choc %</span></div>’
-+’<div class="summary-item"><span class="summary-val">’+getProfile(r)+’</span><span class="summary-label">Profile</span></div>’
-+’</div>’
-+ratioCards
-+’<div class="card"><div class="sl">Cookie Profile</div><div class="profile-text">’+buildProfile(r)+’</div></div>’
-+’<div class="card"><div class="sl">Notes</div><textarea placeholder="Technique, resting time, pan type..." oninput="sno(this.value)">’+esc(recipeNotes)+’</textarea></div>’
-+’<button class="save-btn" style="background:'+saveBg+'" onclick="saveRecipe()">’+saveTxt+’</button>’;
+var dt=r.fl+r.bu+r.ts+r.te+r.lG+r.sG+r.ch+r.cr;
+var bp=r.ts>0?Math.round(pct(nf(fields,‘brownSugar’),r.ts)):null;
+
+// Name card
+var nc=div(‘card’);nc.appendChild(mkSL(‘Recipe Name’));
+var niw=div(‘iw’);
+var ni=document.createElement(‘input’);ni.type=‘text’;ni.placeholder=‘e.g. My Cookie Recipe’;ni.value=rname||’’;
+ni.style.cssText=‘flex:1;padding:0.55rem 0.65rem;border:none;background:#f5f0e8;font-family:monospace;font-size:0.82rem;color:#1a1714;outline:none;’;
+ni.addEventListener(‘input’,function(){rname=this.value;saved=false;render();});
+niw.appendChild(ni);nc.appendChild(niw);frag.appendChild(nc);
+
+// Ingredients card
+var ic=div(‘card’);ic.appendChild(mkSL(‘Base Ingredients’));
+var g2=div(‘g2’);
+[[‘flour’,‘Flour’,‘base = 100%’,‘240’],[‘butter’,‘Butter’,‘fat’,‘170’],[‘brownSugar’,‘Brown Sugar’,’’,‘165’],[‘whiteSugar’,‘White Sugar’,’’,‘100’],[‘eggs’,‘Whole Eggs’,‘count’,‘2’],[‘yolks’,‘Egg Yolks’,‘extra, if any’,‘0’]].forEach(function(a){g2.appendChild(mkInput(a[0],a[1],a[2],a[3]));});
+ic.appendChild(g2);
+var ms=div(‘msep’);ms.appendChild(mkSL(‘Mix-ins & Leavening’));
+var g2b=div(‘g2b’);g2b.appendChild(mkInput(‘choc’,‘Chocolate’,’’,‘300’));g2b.appendChild(mkInput(‘cream’,‘Cream / Milk’,‘optional’,‘30’,‘ml’));ms.appendChild(g2b);
+var g3=div(‘g3’);g3.appendChild(mkSmall(‘bicarb’,‘bicarbUnit’,‘Baking Soda’));g3.appendChild(mkSmall(‘bakingPowder’,‘bakingPowderUnit’,‘Baking Powder’));g3.appendChild(mkSmall(‘salt’,‘saltUnit’,‘Salt’));ms.appendChild(g3);
+ic.appendChild(ms);frag.appendChild(ic);
+
+// Summary bar
+var dark=div(‘dark’);
+[{v:dt>0?Math.round(dt)+‘g’:’–’,l:‘Dough’},{v:bp!==null?bp+’:’+(100-bp):’–’,l:‘Sugar B:W’},{v:r.fl&&r.ch?Math.round(r.choc)+’%’:’–’,l:‘Choc %’},{v:profile(r),l:‘Profile’}].forEach(function(item){
+var sv=div(‘sv’);var sp=el(‘span’,’’,item.v);var sm=el(‘small’,’’,item.l);sv.appendChild(sp);sv.appendChild(sm);dark.appendChild(sv);
+});
+frag.appendChild(dark);
+
+// Ratio bars
+RATIOS.forEach(function(cfg){frag.appendChild(mkBar(r,cfg));});
+
+// Profile card
+var pc=div(‘card’);pc.appendChild(mkSL(‘Cookie Profile’));
+var pt=mkProfile(r);
+if(pt)pc.appendChild(pt);
+else{var pe=div(‘pe’);pe.textContent=‘Enter ingredient weights above to generate a profile reading.’;pc.appendChild(pe);}
+frag.appendChild(pc);
+
+// Notes
+var notec=div(‘card’);notec.appendChild(mkSL(‘Notes’));
+var ta=document.createElement(‘textarea’);ta.placeholder=‘Technique, resting time, pan type, observations after baking…’;ta.textContent=rnotes||’’;
+ta.addEventListener(‘input’,function(){rnotes=this.value;});
+notec.appendChild(ta);frag.appendChild(notec);
+
+// Save button
+var sb=document.createElement(‘button’);sb.className=‘sbtn’;
+sb.style.background=saved?G:(rname.trim()?A:M);
+sb.textContent=saved?‘Saved’:(eid?‘Update Recipe’:‘Save Recipe’);
+sb.addEventListener(‘click’,saveRecipe);frag.appendChild(sb);
+
+return frag;
 }
 
-function listHTML(){
-var html=’<button class="new-btn" onclick="newRecipe()">+ New Recipe</button>’;
-if(recipes.length===0){return html+’<div class="empty">No saved recipes yet. Enter a recipe and hit Save.</div>’;}
-html+=’<div style="font-size:0.62rem;color:#7a7065;margin-bottom:0.75rem;">Tap to load - tick to compare</div>’;
+function renderList(){
+var frag=document.createDocumentFragment();
+var nb=document.createElement(‘button’);nb.className=‘nbtn’;nb.textContent=’+ New Recipe’;nb.addEventListener(‘click’,newRecipe);frag.appendChild(nb);
+if(recipes.length===0){var em=div(‘empty’);em.textContent=‘No saved recipes yet. Enter a recipe and hit Save.’;frag.appendChild(em);return frag;}
+var hint=div(’’);hint.style.cssText=‘font-size:0.62rem;color:#7a7065;margin-bottom:0.75rem;’;hint.textContent=‘Tap to load - tick to compare’;frag.appendChild(hint);
 recipes.forEach(function(recipe){
-var r=calc(merge(EMPTY,recipe.fields));
-var chk=compareIds.indexOf(recipe.id)>-1;
-var ac=editingId===recipe.id?’ active’:’’;
-var tags=RATIOS.slice(0,4).map(function(cfg){
-return r[cfg.key]!==null?’<span class="tag">’+cfg.label+’ ‘+r[cfg.key].toFixed(0)+’%</span>’:’’;
-}).join(’’);
-html+=’<div class="recipe-item'+ac+'">’
-+’<input type=“checkbox” ‘+(chk?‘checked’:’’)+’ onchange=“tc('’+recipe.id+’')” style=“margin-top:0.25rem;accent-color:#8b4513;flex-shrink:0;width:16px;height:16px;”>’
-+’<div style="flex:1;min-width:0;cursor:pointer;" onclick="lr(\''+recipe.id+'\')">’
-+’<div style="font-family:Georgia,serif;font-size:0.95rem;color:#1a1714;">’+esc(recipe.name)+’</div>’
-+’<div class="recipe-tags">’+tags+’<span class="tag profile">’+getProfile(r)+’</span></div>’
-+’</div>’
-+’<button onclick="dr(\''+recipe.id+'\')" style="background:none;border:none;color:#c8b99a;cursor:pointer;font-size:1.1rem;padding:0 0.2rem;flex-shrink:0;line-height:1;">x</button>’
-+’</div>’;
+var r=calc(merge(EMP,recipe.fields));
+var ri=div(‘ri’+(eid===recipe.id?’ on’:’’));
+var cb=document.createElement(‘input’);cb.type=‘checkbox’;cb.checked=cids.indexOf(recipe.id)>-1;cb.style.cssText=‘margin-top:0.25rem;accent-color:#8b4513;flex-shrink:0;width:16px;height:16px;’;
+cb.setAttribute(‘data-id’,recipe.id);cb.addEventListener(‘change’,function(){toggleC(this.getAttribute(‘data-id’));});
+ri.appendChild(cb);
+var info=div(’’);info.style.cssText=‘flex:1;min-width:0;cursor:pointer;’;
+info.setAttribute(‘data-id’,recipe.id);info.addEventListener(‘click’,function(){loadRecipe(this.getAttribute(‘data-id’));});
+var nm=div(’’);nm.style.cssText=‘font-family:Georgia,serif;font-size:0.95rem;color:#1a1714;’;nm.textContent=recipe.name;info.appendChild(nm);
+var tags=div(‘rtags’);
+RATIOS.slice(0,4).forEach(function(cfg){if(r[cfg.k]!==null){var t=div(‘tag’);t.textContent=cfg.lb+’ ‘+r[cfg.k].toFixed(0)+’%’;tags.appendChild(t);}});
+var pt=div(‘tag p’);pt.textContent=profile(r);tags.appendChild(pt);info.appendChild(tags);ri.appendChild(info);
+var db=document.createElement(‘button’);db.style.cssText=‘background:none;border:none;color:#c8b99a;cursor:pointer;font-size:1.1rem;padding:0 0.2rem;flex-shrink:0;line-height:1;’;db.textContent=‘x’;
+db.setAttribute(‘data-id’,recipe.id);db.addEventListener(‘click’,function(){delRecipe(this.getAttribute(‘data-id’));});
+ri.appendChild(db);frag.appendChild(ri);
 });
-if(compareIds.length>=2)html+=’<button class="compare-btn" onclick="sv(\'compare\')">Compare ‘+compareIds.length+’ Recipes</button>’;
-return html;
+if(cids.length>=2){var cb2=document.createElement(‘button’);cb2.className=‘cbtn’;cb2.textContent=‘Compare ‘+cids.length+’ Recipes’;cb2.addEventListener(‘click’,function(){setView(‘compare’);});frag.appendChild(cb2);}
+return frag;
 }
 
-function compareHTML(){
-var selected=recipes.filter(function(r){return compareIds.indexOf(r.id)>-1;});
-var legend=selected.map(function(r,i){
-return ‘<div class="legend-item"><div class="legend-dot" style="background:'+COMPARE_COLORS[i%COMPARE_COLORS.length]+'"></div><span class="legend-name">’+esc(r.name)+’</span></div>’;
-}).join(’’);
-var html=’<div class="legend">’+legend+’</div>’;
+function renderCompare(){
+var sel=recipes.filter(function(r){return cids.indexOf(r.id)>-1;});
+var frag=document.createDocumentFragment();
+var leg=div(‘leg’);sel.forEach(function(r,i){var li=div(‘li’);var ld=div(‘ld’);ld.style.background=CC[i%CC.length];var nm=div(’’);nm.style.cssText=‘font-size:0.62rem;color:#1a1714;’;nm.textContent=r.name;li.appendChild(ld);li.appendChild(nm);leg.appendChild(li);});frag.appendChild(leg);
 RATIOS.forEach(function(cfg){
-html+=’<div class="compare-card"><div style="margin-bottom:0.75rem;"><div style="font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:#8b4513;margin-bottom:0.15rem;">’+cfg.label+’</div><div style="font-family:Georgia,serif;font-size:0.9rem;color:#1a1714;">’+cfg.name+’</div></div>’;
-selected.forEach(function(recipe,i){
-var r=calc(merge(EMPTY,recipe.fields));
-var val=r[cfg.key];
-var barW=val!==null?Math.min(100,(val/cfg.max)*100):0;
-var color=COMPARE_COLORS[i%COMPARE_COLORS.length];
-var markers=cfg.m.map(function(m){return ‘<div class="compare-marker" style="left:'+m+'%"></div>’;}).join(’’);
-html+=’<div class="compare-row">’
-+’<div class="compare-row-head">’
-+’<span class="compare-row-name"><span class="compare-dot" style="background:'+color+'"></span>’+esc(recipe.name)+’</span>’
-+’<span class="compare-row-val">’+(val!==null?val.toFixed(1)+’%’:’–’)+’</span>’
-+’</div>’
-+’<div class="compare-bar"><div class="compare-bar-fill" style="width:'+barW+'%;background:'+color+'"></div>’+markers+’</div>’
-+’</div>’;
+var cc=div(‘cc’);
+var hd=div(’’);hd.style.marginBottom=‘0.75rem’;
+var hl=div(‘rl’);hl.textContent=cfg.lb;hd.appendChild(hl);
+var hn=div(‘rn’);hn.textContent=cfg.nm;hd.appendChild(hn);
+cc.appendChild(hd);
+sel.forEach(function(recipe,i){
+var r=calc(merge(EMP,recipe.fields));var val=r[cfg.k];
+var bw=val!==null?Math.min(100,(val/cfg.mx)*100):0;var color=CC[i%CC.length];
+var cr2=div(‘cr’);
+var crh=div(‘crh’);
+var crn=div(‘crn’);var cd=div(‘cd’);cd.style.background=color;var cnm=document.createTextNode(recipe.name);crn.appendChild(cd);crn.appendChild(cnm);
+var crv=div(‘crv’);crv.textContent=val!==null?val.toFixed(1)+’%’:’–’;
+crh.appendChild(crn);crh.appendChild(crv);cr2.appendChild(crh);
+var cb3=div(‘cb’);var cbf=div(‘cbf’);cbf.style.width=bw+’%’;cbf.style.background=color;cb3.appendChild(cbf);
+cfg.m.forEach(function(m){var cm=div(‘cm’);cm.style.left=m+’%’;cb3.appendChild(cm);});
+cr2.appendChild(cb3);cc.appendChild(cr2);
 });
-var mlabels=cfg.ml.map(function(l){return ‘<span>’+l+’</span>’;}).join(’’);
-html+=’<div style="display:flex;justify-content:space-between;font-size:0.52rem;color:#c8b99a;margin-top:0.35rem;">’+mlabels+’</div></div>’;
+var bl=div(‘bl’);bl.style.marginTop=‘0.35rem’;cfg.ml.forEach(function(l){var s=el(‘span’,’’,l);bl.appendChild(s);});cc.appendChild(bl);frag.appendChild(cc);
 });
-html+=’<div class="card"><div class="sl">Profile Summary</div>’;
-selected.forEach(function(recipe,i){
-var r=calc(merge(EMPTY,recipe.fields));
-var color=COMPARE_COLORS[i%COMPARE_COLORS.length];
-var sep=i<selected.length-1?‘border-bottom:1px dashed #ddd5c5;margin-bottom:0.75rem;padding-bottom:0.75rem;’:’’;
-html+=’<div style="display:flex;align-items:center;gap:0.75rem;'+sep+'">’
-+’<div style="width:10px;height:10px;border-radius:2px;background:'+color+';flex-shrink:0;"></div>’
-+’<div><div style="font-size:0.7rem;color:#1a1714;font-family:Georgia,serif;margin-bottom:0.2rem;">’+esc(recipe.name)+’</div>’
-+’<div style="font-size:0.6rem;color:#7a7065;">’+getProfile(r)+’ - Fat ‘+(r.fat?r.fat.toFixed(0):’–’)+’% - Sugar ‘+(r.sugar?r.sugar.toFixed(0):’–’)+’% - Choc ‘+(r.chocPct?r.chocPct.toFixed(0):’–’)+’%</div>’
-+’</div></div>’;
+// Summary
+var sc=div(‘card’);sc.appendChild(mkSL(‘Profile Summary’));
+sel.forEach(function(recipe,i){
+var r=calc(merge(EMP,recipe.fields));var color=CC[i%CC.length];
+var row=div(’’);row.style.cssText=‘display:flex;align-items:center;gap:0.75rem;’+(i<sel.length-1?‘border-bottom:1px dashed #ddd5c5;margin-bottom:0.75rem;padding-bottom:0.75rem;’:’’);
+var dot=div(‘ld’);dot.style.background=color;
+var info=div(’’);
+var nm=div(’’);nm.style.cssText=‘font-size:0.7rem;color:#1a1714;font-family:Georgia,serif;margin-bottom:0.2rem;’;nm.textContent=recipe.name;
+var st=div(’’);st.style.cssText=‘font-size:0.6rem;color:#7a7065;’;st.textContent=profile(r)+’ - Fat ‘+(r.fat?r.fat.toFixed(0):’–’)+’% - Sugar ‘+(r.sugar?r.sugar.toFixed(0):’–’)+’% - Choc ‘+(r.choc?r.choc.toFixed(0):’–’)+’%’;
+info.appendChild(nm);info.appendChild(st);row.appendChild(dot);row.appendChild(info);sc.appendChild(row);
 });
-html+=’</div>’;
-return html;
+frag.appendChild(sc);return frag;
 }
 
-function transferHTML(){
-var importBg=transferText.trim()?ACCENT:WARM_MID;
-var importCursor=transferText.trim()?‘pointer’:‘not-allowed’;
-return ‘<div class="transfer-panel">’
-+’<div style="font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:#8b4513;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;">’
-+’<span>Export / Import Recipes</span>’
-+’<button onclick="toggleTransfer()" style="background:none;border:none;color:#c8b99a;cursor:pointer;font-size:1rem;line-height:1;">x</button></div>’
-+’<div class="transfer-btns">’
-+’<button class="transfer-export" onclick="exportRecipes()">Export</button>’
-+’<button class="transfer-import" style="background:'+importBg+';cursor:'+importCursor+'" onclick="importRecipes()">Import</button>’
-+’</div>’
-+’<textarea class="transfer-textarea" placeholder="Paste exported recipe data here to import..." oninput="transferText=this.value;render()">’+esc(transferText)+’</textarea>’
-+(transferMsg?’<div class="transfer-msg">’+esc(transferMsg)+’</div>’:’’)
-+’</div>’;
+function renderTransfer(){
+var tp=div(‘tp’);
+var hd=div(’’);hd.style.cssText=‘font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:#8b4513;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;’;
+var htxt=el(‘span’,’’,‘Export / Import Recipes’);
+var hx=document.createElement(‘button’);hx.style.cssText=‘background:none;border:none;color:#c8b99a;cursor:pointer;font-size:1rem;line-height:1;’;hx.textContent=‘x’;hx.addEventListener(‘click’,toggleT);
+hd.appendChild(htxt);hd.appendChild(hx);tp.appendChild(hd);
+var btns=div(‘tbtns’);
+var exp=document.createElement(‘button’);exp.className=‘te’;exp.textContent=‘Export’;exp.addEventListener(‘click’,doExport);btns.appendChild(exp);
+var imp=document.createElement(‘button’);imp.className=‘ti’;imp.style.background=ttext.trim()?A:M;imp.style.cursor=ttext.trim()?‘pointer’:‘not-allowed’;imp.textContent=‘Import’;imp.addEventListener(‘click’,doImport);btns.appendChild(imp);
+tp.appendChild(btns);
+var ta=document.createElement(‘textarea’);ta.className=‘tta’;ta.placeholder=‘Paste exported recipe data here to import…’;ta.value=ttext||’’;
+ta.addEventListener(‘input’,function(){ttext=this.value;render();});tp.appendChild(ta);
+if(tmsg){var tm=div(‘tm’);tm.textContent=tmsg;tp.appendChild(tm);}
+return tp;
 }
 
-function merge(a,b){var r=obj(a);if(b){Object.keys(b).forEach(function(k){r[k]=b[k];});}return r;}
+function merge(a,b){var r=cp(a);if(b)Object.keys(b).forEach(function(k){r[k]=b[k];});return r;}
 
-function sf(k,v){fields[k]=v;saved=false;render();}
-function sn(v){recipeName=v;saved=false;render();}
-function sno(v){recipeNotes=v;}
-function sv(v){view=v;render();}
-function tc(id){var i=compareIds.indexOf(id);if(i>-1)compareIds.splice(i,1);else compareIds.push(id);render();}
+function setView(v){view=v;render();}
+function toggleC(id){var i=cids.indexOf(id);if(i>-1)cids.splice(i,1);else cids.push(id);render();}
+function toggleT(){showT=!showT;ttext=’’;tmsg=’’;render();}
 
 function saveRecipe(){
-if(!recipeName.trim())return;
-var recipe={id:editingId||Date.now().toString(),name:recipeName.trim(),notes:recipeNotes,fields:obj(fields),savedAt:Date.now()};
-if(editingId){recipes=recipes.map(function(r){return r.id===editingId?recipe:r;});}else{recipes.push(recipe);}
-store(recipes);editingId=recipe.id;saved=true;render();
+if(!rname.trim())return;
+var recipe={id:eid||Date.now().toString(),name:rname.trim(),notes:rnotes,fields:cp(fields),savedAt:Date.now()};
+if(eid){recipes=recipes.map(function(r){return r.id===eid?recipe:r;});}else{recipes.push(recipe);}
+lsSet(‘cct2’,recipes);eid=recipe.id;saved=true;render();
 }
 
-function lr(id){
+function loadRecipe(id){
 var recipe=null;recipes.forEach(function(r){if(r.id===id)recipe=r;});if(!recipe)return;
-fields=merge(EMPTY,recipe.fields);recipeName=recipe.name;recipeNotes=recipe.notes||’’;editingId=recipe.id;saved=true;view=‘editor’;render();
+fields=merge(EMP,recipe.fields);rname=recipe.name;rnotes=recipe.notes||’’;eid=recipe.id;saved=true;view=‘editor’;render();
 }
 
-function dr(id){
+function delRecipe(id){
 if(!confirm(‘Delete this recipe?’))return;
-recipes=recipes.filter(function(r){return r.id!==id;});store(recipes);
-if(editingId===id){fields=obj(EMPTY);recipeName=’’;recipeNotes=’’;editingId=null;saved=false;}
-compareIds=compareIds.filter(function(i){return i!==id;});render();
+recipes=recipes.filter(function(r){return r.id!==id;});lsSet(‘cct2’,recipes);
+if(eid===id){fields=cp(EMP);rname=’’;rnotes=’’;eid=null;saved=false;}
+cids=cids.filter(function(i){return i!==id;});render();
 }
 
-function newRecipe(){fields=obj(EMPTY);recipeName=’’;recipeNotes=’’;editingId=null;saved=false;view=‘editor’;render();}
+function newRecipe(){fields=cp(EMP);rname=’’;rnotes=’’;eid=null;saved=false;view=‘editor’;render();}
 
-function toggleTransfer(){showTransfer=!showTransfer;transferText=’’;transferMsg=’’;render();}
-
-function exportRecipes(){
-if(recipes.length===0){transferMsg=‘No recipes to export.’;render();return;}
-transferText=JSON.stringify(recipes,null,2);
-transferMsg=‘Copy all the text below, then paste it into Import on any device.’;render();
-setTimeout(function(){var ta=document.querySelector(’.transfer-textarea’);if(ta)ta.select();},100);
+function doExport(){
+if(recipes.length===0){tmsg=‘No recipes to export.’;render();return;}
+ttext=JSON.stringify(recipes,null,2);tmsg=‘Copy all the text below, then paste it into Import on any device.’;render();
+setTimeout(function(){var ta=document.querySelector(’.tta’);if(ta)ta.select();},100);
 }
 
-function importRecipes(){
+function doImport(){
 try{
-var parsed=JSON.parse(transferText);
-if(!Array.isArray(parsed))throw new Error();
+var parsed=JSON.parse(ttext);if(!Array.isArray(parsed))throw new Error();
 parsed.forEach(function(inc){if(!recipes.filter(function(r){return r.id===inc.id;}).length)recipes.push(inc);});
-store(recipes);transferMsg=‘Imported ‘+parsed.length+’ recipe(s).’;transferText=’’;render();
-}catch(e){transferMsg=‘Could not read that data.’;render();}
+lsSet(‘cct2’,recipes);tmsg=‘Imported ‘+parsed.length+’ recipe(s).’;ttext=’’;render();
+}catch(ex){tmsg=‘Could not read that data.’;render();}
 }
 
 function render(){
-var tabDefs=[
-{id:‘editor’,label:editingId?‘Edit’:‘New’,disabled:false},
-{id:‘list’,label:recipes.length>0?‘Recipes (’+recipes.length+’)’:‘Recipes’,disabled:false},
-{id:‘compare’,label:compareIds.length>0?‘Compare (’+compareIds.length+’)’:‘Compare’,disabled:compareIds.length<2}
-];
-document.getElementById(‘tabs’).innerHTML=tabDefs.map(function(t){
-return ‘<button class=“tab’+(view===t.id?’ active’:’’)+’” ‘+(t.disabled?‘disabled’:’’)+’ onclick=“sv('’+t.id+’')”>’+(t.label)+’</button>’;
-}).join(’’);
-
-var tl=document.getElementById(‘transferToggle’);
-tl.textContent=showTransfer?‘Hide Export / Import’:‘Export / Import recipes’;
-tl.className=‘transfer-link’+(showTransfer?’ active’:’’);
-
-var html=showTransfer?transferHTML():’’;
-if(view===‘editor’)html+=editorHTML();
-else if(view===‘list’)html+=listHTML();
-else if(view===‘compare’)html+=compareHTML();
-document.getElementById(‘content’).innerHTML=html;
+var tabs=document.getElementById(‘tabs’);tabs.innerHTML=’’;
+var defs=[{id:‘editor’,lb:eid?‘Edit’:‘New’,off:false},{id:‘list’,lb:recipes.length>0?‘Recipes (’+recipes.length+’)’:‘Recipes’,off:false},{id:‘compare’,lb:cids.length>0?‘Compare (’+cids.length+’)’:‘Compare’,off:cids.length<2}];
+defs.forEach(function(d){
+var b=document.createElement(‘button’);b.className=‘tab’+(view===d.id?’ on’:’’);b.disabled=d.off;b.textContent=d.lb;b.setAttribute(‘data-v’,d.id);b.addEventListener(‘click’,function(){if(!this.disabled)setView(this.getAttribute(‘data-v’));});tabs.appendChild(b);
+});
+var tl=document.getElementById(‘tlink’);tl.textContent=showT?‘Hide Export / Import’:‘Export / Import recipes’;tl.className=‘tlink’+(showT?’ on’:’’);
+var wrap=document.getElementById(‘wrap’);wrap.innerHTML=’’;
+if(showT)wrap.appendChild(renderTransfer());
+if(view===‘editor’)wrap.appendChild(renderEditor());
+else if(view===‘list’)wrap.appendChild(renderList());
+else if(view===‘compare’)wrap.appendChild(renderCompare());
 }
 
-try {
 render();
-} catch(e) {
-document.getElementById(‘content’).innerHTML = ‘<div style="padding:1rem;color:red;font-size:0.8rem;background:#fff;margin:1rem;border-radius:4px;border:1px solid red;"><strong>JS Error:</strong> ’ + e.message + ‘<br><br>’ + (e.stack||’’).replace(/</g,’<’).replace(/
-/g,’<br>’) + ‘</div>’;
-}
 </script>
 
 </body>

@@ -100,6 +100,16 @@ textarea{width:100%;min-height:80px;border:1px solid #ddd5c5;border-radius:3px;p
 <div class="wrap" id="wrap"></div>
 </div>
 <script>
+window.onerror = function(msg, src, line, col, err) {
+  var d = document.getElementById('wrap');
+  if (d) {
+    var e = document.createElement('div');
+    e.style.cssText = 'background:#fff;border:2px solid red;padding:1rem;margin:1rem;border-radius:4px;font-size:0.8rem;color:red;';
+    e.textContent = 'Error line ' + line + ': ' + msg;
+    d.appendChild(e);
+  }
+  return false;
+};
 var A='#8b4513',AL='#d4956a',G='#5a7a4a',W='#c17f24',E='#9b3a2a',M='#c8b99a',P='#f5f0e8';
 var CC=[AL,'#6b8b6b','#c8a44a','#8b6b3a','#a0714a','#4a3020'];
 var RATIOS=[

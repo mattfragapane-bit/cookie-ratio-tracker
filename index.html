@@ -3,382 +3,427 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Cookie Ratio Tracker</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: #f5f0e8; font-family: monospace; }
-  input[type=number]::-webkit-inner-spin-button,
-  input[type=number]::-webkit-outer-spin-button { opacity: 1; }
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:#f5f0e8;font-family:monospace;min-height:100vh;padding-bottom:3rem;}
+input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{opacity:1;}
+.app{background:#f5f0e8;min-height:100vh;background-image:radial-gradient(ellipse at 20% 0%,rgba(139,69,19,0.06) 0%,transparent 50%);}
+.header{text-align:center;padding:1.5rem 1rem 1.25rem;border-bottom:1px solid #ddd5c5;}
+.eyebrow{font-size:0.58rem;letter-spacing:0.2em;text-transform:uppercase;color:#d4956a;margin-bottom:0.4rem;}
+h1{font-family:Georgia,serif;font-size:clamp(1.4rem,4vw,1.9rem);font-weight:400;color:#1a1714;}
+h1 em{color:#8b4513;font-style:italic;}
+.rule{width:40px;height:2px;background:#8b4513;margin:0.75rem auto 0;}
+.tabs{display:flex;border-bottom:1px solid #ddd5c5;background:#fff;}
+.tab{flex:1;padding:0.75rem 0.5rem;background:none;border:none;border-bottom:2px solid transparent;color:#7a7065;font-family:monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;}
+.tab.active{border-bottom:2px solid #8b4513;color:#8b4513;}
+.tab:disabled{color:#c8b99a;cursor:not-allowed;}
+.transfer-bar{text-align:right;padding:0.4rem 1rem;background:#fff;border-bottom:1px solid #ddd5c5;}
+.transfer-link{background:none;border:none;color:#c8b99a;font-family:monospace;font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;text-decoration:underline;}
+.transfer-link.active{color:#8b4513;}
+.content{max-width:700px;margin:0 auto;padding:1.25rem 1rem 0;}
+.card{background:#fff;border:1px solid #ddd5c5;border-radius:4px;padding:1.25rem 1.5rem;margin-bottom:1.25rem;}
+.card-dark{background:#1a1714;border-radius:4px;padding:0.85rem 1.25rem;margin-bottom:1.25rem;display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:0.5rem;}
+.sl{font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:#8b4513;margin-bottom:1rem;display:flex;align-items:center;gap:0.6rem;}
+.sl::after{content:'';flex:1;height:1px;background:#ddd5c5;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0.85rem;}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0.75rem;}
+.grid2b{display:grid;grid-template-columns:1fr 1fr;gap:0.75rem;margin-bottom:0.75rem;}
+.field{display:flex;flex-direction:column;gap:0.3rem;}
+.field label{font-size:0.6rem;letter-spacing:0.1em;text-transform:uppercase;color:#7a7065;display:flex;justify-content:space-between;}
+.field label span{font-style:italic;text-transform:none;letter-spacing:0;color:#c8b99a;font-size:0.55rem;}
+.input-wrap{display:flex;border:1px solid #ddd5c5;border-radius:3px;overflow:hidden;background:#fff;}
+.input-wrap input{flex:1;padding:0.5rem 0.6rem;border:none;background:transparent;font-family:monospace;font-size:0.82rem;color:#1a1714;outline:none;width:100%;}
+.input-wrap .unit{padding:0 0.55rem;font-size:0.6rem;color:#c8b99a;background:#f5f0e8;border-left:1px solid #ddd5c5;display:flex;align-items:center;white-space:nowrap;}
+.input-wrap select{padding:0 0.35rem;border:none;border-left:1px solid #ddd5c5;background:#f5f0e8;font-family:monospace;font-size:0.58rem;color:#c8b99a;outline:none;cursor:pointer;}
+.mixins-sep{margin-top:1rem;padding-top:1rem;border-top:1px dashed #ddd5c5;}
+.summary-item{text-align:center;}
+.summary-val{font-family:Georgia,serif;font-size:1.1rem;color:#d4956a;display:block;}
+.summary-label{font-size:0.52rem;letter-spacing:0.1em;text-transform:uppercase;color:#c8b99a;margin-top:0.2rem;display:block;}
+.ratio-card{background:#fff;border:1px solid #ddd5c5;border-radius:4px;padding:1.1rem 1.25rem;margin-bottom:0.65rem;}
+.ratio-head{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.4rem;}
+.ratio-label{font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:#8b4513;margin-bottom:0.2rem;}
+.ratio-name{font-family:Georgia,serif;font-size:0.95rem;color:#1a1714;}
+.ratio-val{font-size:1.3rem;font-weight:500;color:#8b4513;letter-spacing:-0.02em;}
+.ratio-val span{font-size:0.65rem;color:#7a7065;font-weight:300;}
+.ratio-desc{font-size:0.63rem;color:#7a7065;line-height:1.6;margin-bottom:0.6rem;}
+.bar-wrap{position:relative;height:6px;background:#f5f0e8;border-radius:99px;margin-bottom:0.25rem;}
+.bar-track{position:absolute;inset:0;border-radius:99px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:99px;transition:width 0.5s cubic-bezier(0.34,1.56,0.64,1);}
+.bar-marker{position:absolute;top:-3px;width:2px;height:12px;background:#ddd5c5;transform:translateX(-50%);}
+.bar-labels{display:flex;justify-content:space-between;font-size:0.55rem;color:#c8b99a;margin-bottom:0.4rem;}
+.status-tag{display:inline-block;font-size:0.55rem;letter-spacing:0.1em;text-transform:uppercase;padding:0.12rem 0.45rem;border-radius:2px;font-weight:500;}
+.profile-text{font-size:0.72rem;line-height:1.9;color:#1a1714;}
+.profile-text p{margin-bottom:0.6rem;}
+.profile-text p:last-child{margin-bottom:0;}
+.profile-text strong{color:#8b4513;}
+.profile-empty{font-size:0.68rem;color:#c8b99a;font-style:italic;text-align:center;}
+textarea{width:100%;min-height:80px;border:1px solid #ddd5c5;border-radius:3px;padding:0.6rem;font-family:monospace;font-size:0.72rem;color:#1a1714;background:#f5f0e8;resize:vertical;outline:none;line-height:1.7;box-sizing:border-box;}
+.save-btn{width:100%;padding:0.85rem;border:none;border-radius:4px;color:#fff;font-family:monospace;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background 0.3s;}
+.recipe-item{background:#fff;border:1px solid #ddd5c5;border-radius:4px;padding:1rem 1.25rem;margin-bottom:0.65rem;display:flex;align-items:flex-start;gap:0.75rem;}
+.recipe-item.active{border-color:#d4956a;}
+.recipe-tags{display:flex;gap:0.4rem;flex-wrap:wrap;margin-top:0.35rem;}
+.tag{font-size:0.57rem;background:#f5f0e8;color:#7a7065;padding:0.1rem 0.4rem;border-radius:2px;}
+.tag.profile{color:#8b4513;font-weight:500;}
+.new-btn{width:100%;padding:0.65rem;background:none;border:1px dashed #c8b99a;border-radius:4px;color:#7a7065;font-family:monospace;font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;margin-bottom:1rem;}
+.compare-btn{width:100%;padding:0.75rem;background:#8b4513;border:none;border-radius:4px;color:#fff;font-family:monospace;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;margin-top:0.5rem;}
+.legend{background:#fff;border:1px solid #ddd5c5;border-radius:4px;padding:0.85rem 1.25rem;margin-bottom:1.25rem;display:flex;flex-wrap:wrap;gap:0.6rem;}
+.legend-item{display:flex;align-items:center;gap:0.4rem;}
+.legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+.legend-name{font-size:0.62rem;color:#1a1714;}
+.compare-card{background:#fff;border:1px solid #ddd5c5;border-radius:4px;padding:1rem 1.25rem;margin-bottom:0.65rem;}
+.compare-row{margin-bottom:0.55rem;}
+.compare-row-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:0.2rem;}
+.compare-row-name{font-size:0.6rem;color:#7a7065;display:flex;align-items:center;gap:0.35rem;}
+.compare-dot{width:8px;height:8px;border-radius:1px;display:inline-block;flex-shrink:0;}
+.compare-row-val{font-size:0.65rem;font-weight:500;color:#8b4513;}
+.compare-bar{position:relative;height:8px;background:#f5f0e8;border-radius:99px;}
+.compare-bar-fill{height:100%;border-radius:99px;}
+.compare-marker{position:absolute;top:-2px;width:1px;height:12px;background:#ddd5c5;transform:translateX(-50%);}
+.transfer-panel{background:#fff;border:1px solid #ddd5c5;border-radius:4px;padding:1.25rem 1.5rem;margin-bottom:1.25rem;}
+.transfer-btns{display:flex;gap:0.6rem;margin-bottom:0.75rem;}
+.transfer-export{flex:1;padding:0.55rem;background:#f5f0e8;border:1px solid #ddd5c5;border-radius:3px;font-family:monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;color:#1a1714;}
+.transfer-import{flex:1;padding:0.55rem;border:none;border-radius:3px;font-family:monospace;font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;color:#fff;}
+.transfer-msg{font-size:0.65rem;color:#5a7a4a;margin-top:0.5rem;}
+.transfer-textarea{width:100%;min-height:120px;border:1px solid #ddd5c5;border-radius:3px;padding:0.6rem;font-family:monospace;font-size:0.65rem;color:#1a1714;background:#f5f0e8;resize:vertical;outline:none;line-height:1.6;box-sizing:border-box;}
+.empty{text-align:center;padding:3rem 1rem;color:#c8b99a;font-size:0.75rem;font-style:italic;}
+@media(max-width:500px){.grid2{grid-template-columns:1fr;}.grid3{grid-template-columns:1fr 1fr;}}
 </style>
 </head>
 <body>
-<div id="root"></div>
-<script type="text/babel">
-const { useState, useEffect, useCallback } = React;
+<div class="app" id="app">
+<div class="header">
+  <div class="eyebrow">Baker's Ratio Tracker</div>
+  <h1>Chocolate Chip <em>Cookie</em> Ratios</h1>
+  <div class="rule"></div>
+</div>
+<div class="tabs" id="tabs"></div>
+<div class="transfer-bar">
+  <button class="transfer-link" id="transferToggle" onclick="toggleTransfer()">Export / Import recipes</button>
+</div>
+<div class="content" id="content"></div>
+</div>
 
-const ACCENT=”#8b4513”,ACCENT_LIGHT=”#d4956a”,INK=”#1a1714”,PARCHMENT=”#f5f0e8”,MUTED=”#7a7065”,RULE=”#ddd5c5”,WARM_MID=”#c8b99a”,GOOD=”#5a7a4a”,WARN=”#c17f24”,ALERT=”#9b3a2a”;
-const COMPARE_COLORS=[ACCENT_LIGHT,”#6b8b6b”,”#c8a44a”,”#8b6b3a”,”#a0714a”,”#4a3020”];
+<script>
+// ── Data ──────────────────────────────────────────────────────────────────────
+const ACCENT='#8b4513',ACCENT_LIGHT='#d4956a',GOOD='#5a7a4a',WARN='#c17f24',ALERT='#9b3a2a',WARM_MID='#c8b99a',PARCHMENT='#f5f0e8';
+const COMPARE_COLORS=[ACCENT_LIGHT,'#6b8b6b','#c8a44a','#8b6b3a','#a0714a','#4a3020'];
 
-const RATIO_CONFIGS=[
-{key:“fat”,label:“Fat”,name:“Butter to Flour”,barColor:ACCENT_LIGHT,maxPct:100,thresholds:[20,50,80,95],markers:[40,65,80],markerLabels:[“lean”,“classic”,“rich”],desc:“Controls spread, richness, and chew. Higher fat = thinner, crispier, more flavourful. Lower fat = thicker, cakier, more structured.”},
-{key:“sugar”,label:“Sugar”,name:“Total Sugar to Flour”,barColor:”#c8a44a”,maxPct:120,thresholds:[20,55,90,110],markers:[40,65,90],markerLabels:[“mild”,“classic”,“sweet”],desc:“Drives sweetness, spread, and browning. Very high sugar = thin, lacey, crispy. Brown sugar adds moisture; white encourages spread and snap.”},
-{key:“brown”,label:“Brown Sugar”,name:“Brown vs White Split”,barColor:”#a0714a”,maxPct:100,thresholds:[10,40,75,90],markers:[33,60,80],markerLabels:[“crunchy”,“balanced”,“chewy”],desc:“Brown sugar retains moisture for chew and caramel notes. White promotes spread and crunch.”},
-{key:“egg”,label:“Egg”,name:“Eggs to Flour”,barColor:”#8b6b3a”,maxPct:80,thresholds:[15,30,55,70],markers:[25,45,65],markerLabels:[“lean”,“standard”,“rich”],desc:“Whites provide structure; yolks provide richness. Extra yolks = fudgy, dense. High whites = puffier, more cakey.”},
-{key:“bicarb”,label:“Baking Soda”,name:“Baking Soda to Flour”,barColor:”#6b8b6b”,maxPct:3,thresholds:[0.3,0.8,1.4,2.0],markers:[25,55,80],markerLabels:[“low”,“ideal”,“high”],desc:“Needs an acid to activate (brown sugar, cream, buttermilk). Drives Maillard browning, spread, and crispier edges. Too much = soapy off-notes.”},
-{key:“bpowder”,label:“Baking Powder”,name:“Baking Powder to Flour”,barColor:”#8b9b6b”,maxPct:3,thresholds:[0.2,0.6,1.2,1.8],markers:[20,50,75],markerLabels:[“low”,“typical”,“high”],desc:“Self-contained leavener (acid + base). Gives a cleaner, more neutral lift. Promotes height over spread. More common in cakey-style cookies.”},
-{key:“choc”,label:“Chocolate”,name:“Chocolate to Flour”,barColor:”#4a3020”,maxPct:160,thresholds:[10,50,120,150],markers:[30,55,80],markerLabels:[“light”,“generous”,“loaded”],desc:“Higher ratios produce pooling chocolate. Very high loads (120%+) make chocolate structural, not just a mix-in.”},
+const RATIOS=[
+  {key:'fat',label:'Fat',name:'Butter to Flour',color:ACCENT_LIGHT,max:100,t:[20,50,80,95],m:[40,65,80],ml:['lean','classic','rich'],desc:'Controls spread, richness, and chew. Higher fat = thinner, crispier, more flavourful. Lower fat = thicker, cakier, more structured.'},
+  {key:'sugar',label:'Sugar',name:'Total Sugar to Flour',color:'#c8a44a',max:120,t:[20,55,90,110],m:[40,65,90],ml:['mild','classic','sweet'],desc:'Drives sweetness, spread, and browning. Very high sugar = thin, lacey, crispy. Brown sugar adds moisture; white encourages spread and snap.'},
+  {key:'brown',label:'Brown Sugar',name:'Brown vs White Split',color:'#a0714a',max:100,t:[10,40,75,90],m:[33,60,80],ml:['crunchy','balanced','chewy'],desc:'Brown sugar retains moisture for chew and caramel notes. White promotes spread and crunch.'},
+  {key:'egg',label:'Egg',name:'Eggs to Flour',color:'#8b6b3a',max:80,t:[15,30,55,70],m:[25,45,65],ml:['lean','standard','rich'],desc:'Whites provide structure; yolks provide richness. Extra yolks = fudgy, dense. High whites = puffier, more cakey.'},
+  {key:'bicarb',label:'Baking Soda',name:'Baking Soda to Flour',color:'#6b8b6b',max:3,t:[0.3,0.8,1.4,2.0],m:[25,55,80],ml:['low','ideal','high'],desc:'Needs an acid to activate (brown sugar, cream, buttermilk). Drives Maillard browning, spread, and crispier edges. Too much = soapy off-notes.'},
+  {key:'bpowder',label:'Baking Powder',name:'Baking Powder to Flour',color:'#8b9b6b',max:3,t:[0.2,0.6,1.2,1.8],m:[20,50,75],ml:['low','typical','high'],desc:'Self-contained leavener (acid + base). Gives a cleaner, more neutral lift. Promotes height over spread. More common in cakey-style cookies.'},
+  {key:'choc',label:'Chocolate',name:'Chocolate to Flour',color:'#4a3020',max:160,t:[10,50,120,150],m:[30,55,80],ml:['light','generous','loaded'],desc:'Higher ratios produce pooling chocolate. Very high loads (120%+) make chocolate structural, not just a mix-in.'},
 ];
 
-const EMPTY={flour:””,butter:””,brownSugar:””,whiteSugar:””,eggs:””,yolks:””,choc:””,bicarb:””,bicarbUnit:“tsp”,bakingPowder:””,bakingPowderUnit:“tsp”,salt:””,saltUnit:“tsp”,cream:””};
-const UNIT_KEYS=new Set([“bicarbUnit”,“bakingPowderUnit”,“saltUnit”]);
+const EMPTY={flour:'',butter:'',brownSugar:'',whiteSugar:'',eggs:'',yolks:'',choc:'',bicarb:'',bicarbUnit:'tsp',bakingPowder:'',bakingPowderUnit:'tsp',salt:'',saltUnit:'tsp',cream:''};
 const TSP_G={bicarb:6,bakingPowder:4,salt:6};
 
-function toG(val,unit,key){if(unit===“tsp”)return val*TSP_G[key];if(unit===“tbsp”)return val*TSP_G[key]*3;return val;}
-function numify(f){const r={};Object.keys(f).forEach(k=>{if(UNIT_KEYS.has(k))r[k]=f[k]||“tsp”;else{const v=parseFloat(f[k]);r[k]=isNaN(v)||v<0?0:v;}});return r;}
+// ── State ─────────────────────────────────────────────────────────────────────
+let view='editor', recipes=[], fields={...EMPTY}, recipeName='', recipeNotes='', editingId=null, compareIds=[], saved=false, showTransfer=false, transferText='', transferMsg='';
+
+try{const s=localStorage.getItem('cct-recipes');if(s)recipes=JSON.parse(s);}catch(e){}
+
+function save(r){try{localStorage.setItem('cct-recipes',JSON.stringify(r));}catch(e){}}
+
+// ── Calculations ──────────────────────────────────────────────────────────────
+function toG(v,u,k){if(u==='tsp')return v*TSP_G[k];if(u==='tbsp')return v*TSP_G[k]*3;return v;}
+function n(k){const v=parseFloat(fields[k]);return isNaN(v)||v<0?0:v;}
+function nf(f,k){const v=parseFloat((f||{})[k]);return isNaN(v)||v<0?0:v;}
 function pct(a,b){return b?(a/b)*100:null;}
 
-function calcRatios(n){
-const totalSugar=n.brownSugar+n.whiteSugar,totalEgg=n.eggs*50+n.yolks*18;
-const bicarbG=toG(n.bicarb,n.bicarbUnit,“bicarb”),bpG=toG(n.bakingPowder,n.bakingPowderUnit,“bakingPowder”),saltG=toG(n.salt,n.saltUnit,“salt”);
-const leavenG=bicarbG+bpG;
-return{fat:pct(n.butter,n.flour),sugar:pct(totalSugar,n.flour),brown:totalSugar>0?pct(n.brownSugar,totalSugar):null,egg:pct(totalEgg,n.flour),bicarb:pct(bicarbG,n.flour),bpowder:pct(bpG,n.flour),choc:pct(n.choc,n.flour),totalSugar,totalEgg,leavenG,saltG,bicarbG,bpG,hasExtraYolks:n.yolks>0};
+function calc(f){
+  const flour=nf(f,'flour'),butter=nf(f,'butter'),bs=nf(f,'brownSugar'),ws=nf(f,'whiteSugar');
+  const eggs=nf(f,'eggs'),yolks=nf(f,'yolks'),choc=nf(f,'choc'),cream=nf(f,'cream');
+  const bicarbU=f.bicarbUnit||'tsp',bpU=f.bakingPowderUnit||'tsp',saltU=f.saltUnit||'tsp';
+  const bicarbG=toG(nf(f,'bicarb'),bicarbU,'bicarb');
+  const bpG=toG(nf(f,'bakingPowder'),bpU,'bakingPowder');
+  const saltG=toG(nf(f,'salt'),saltU,'salt');
+  const totalSugar=bs+ws,totalEgg=eggs*50+yolks*18,leavenG=bicarbG+bpG;
+  return{flour,butter,totalSugar,totalEgg,leavenG,saltG,bicarbG,bpG,choc,cream,
+    fat:pct(butter,flour),sugar:pct(totalSugar,flour),
+    brown:totalSugar>0?pct(bs,totalSugar):null,
+    egg:pct(totalEgg,flour),bicarb:pct(bicarbG,flour),bpowder:pct(bpG,flour),
+    chocPct:pct(choc,flour),hasExtraYolks:yolks>0};
 }
 
-function getStatus(val,[lo,okLo,okHi,hi]){
-if(val===null)return{label:”—”,color:WARM_MID,bg:PARCHMENT};
-if(val<lo)return{label:“Low”,color:ALERT,bg:“rgba(155,58,42,0.1)”};
-if(val<okLo)return{label:“Below typical”,color:ALERT,bg:“rgba(155,58,42,0.1)”};
-if(val<=okHi)return{label:“Typical range”,color:GOOD,bg:“rgba(90,122,74,0.1)”};
-if(val<=hi)return{label:“Above typical”,color:WARN,bg:“rgba(193,127,36,0.1)”};
-return{label:“High”,color:WARN,bg:“rgba(193,127,36,0.1)”};
+function getStatus(v,t){
+  if(v===null)return{label:'—',color:WARM_MID,bg:PARCHMENT};
+  if(v<t[0])return{label:'Low',color:ALERT,bg:'rgba(155,58,42,0.1)'};
+  if(v<t[1])return{label:'Below typical',color:ALERT,bg:'rgba(155,58,42,0.1)'};
+  if(v<=t[2])return{label:'Typical range',color:GOOD,bg:'rgba(90,122,74,0.1)'};
+  if(v<=t[3])return{label:'Above typical',color:WARN,bg:'rgba(193,127,36,0.1)'};
+  return{label:'High',color:WARN,bg:'rgba(193,127,36,0.1)'};
 }
 
 function getProfile(r){
-if(!r.fat)return”—”;
-if(r.fat>=70&&r.brown>=60&&r.egg>=40)return”Fudgy”;
-if(r.fat<=55&&r.sugar>=80)return”Crispy”;
-if(r.fat>=65&&r.brown>=55)return”Chewy”;
-if(r.fat<=55&&r.egg>=55)return”Cakey”;
-return”Balanced”;
+  if(!r.fat)return'—';
+  if(r.fat>=70&&r.brown>=60&&r.egg>=40)return'Fudgy';
+  if(r.fat<=55&&r.sugar>=80)return'Crispy';
+  if(r.fat>=65&&r.brown>=55)return'Chewy';
+  if(r.fat<=55&&r.egg>=55)return'Cakey';
+  return'Balanced';
 }
 
-function storageGet(key){try{const v=localStorage.getItem(key);return v?JSON.parse(v):null;}catch(e){return null;}}
-function storageSet(key,val){try{localStorage.setItem(key,JSON.stringify(val));}catch(e){}}
-
-function SL({text}){return <div style={{fontSize:“0.58rem”,letterSpacing:“0.18em”,textTransform:“uppercase”,color:ACCENT,marginBottom:“1rem”,display:“flex”,alignItems:“center”,gap:“0.6rem”}}>{text}<div style={{flex:1,height:1,background:RULE}}/></div>;}
-
-function NumInput({id,label,hint,value,onChange,step,placeholder,unit}){
-return <div style={{display:“flex”,flexDirection:“column”,gap:“0.3rem”}}>
-<label style={{fontSize:“0.6rem”,letterSpacing:“0.1em”,textTransform:“uppercase”,color:MUTED,display:“flex”,justifyContent:“space-between”}}>
-{label}{hint&&<span style={{fontStyle:“italic”,textTransform:“none”,letterSpacing:0,color:WARM_MID,fontSize:“0.55rem”}}>{hint}</span>}
-</label>
-<div style={{display:“flex”,border:“1px solid “+RULE,borderRadius:3,overflow:“hidden”,background:”#fff”}}>
-<input type=“number” min=“0” step={step||“1”} placeholder={placeholder} value={value} onChange={e=>onChange(id,e.target.value)}
-style={{flex:1,padding:“0.5rem 0.6rem”,border:“none”,background:“transparent”,fontFamily:“monospace”,fontSize:“0.82rem”,color:INK,outline:“none”,width:“100%”}}/>
-<span style={{padding:“0 0.55rem”,fontSize:“0.6rem”,color:WARM_MID,background:PARCHMENT,borderLeft:“1px solid “+RULE,display:“flex”,alignItems:“center”}}>
-{unit||(id===“eggs”||id===“yolks”?“ct”:“g”)}
-</span>
-</div>
-
-  </div>;
+function buildProfile(r){
+  if(!r.flour)return'<p class="profile-empty">Enter ingredient weights above to generate a profile reading.</p>';
+  const lines=[];
+  const{fat,brown,egg,bicarbG,bpG}=r;
+  if(fat>=75)lines.push('<strong>Very rich fat ('+fat.toFixed(0)+'%)</strong> — generously buttery, significant spread, thin crispy edges.');
+  else if(fat>=55)lines.push('<strong>Classic fat ('+fat.toFixed(0)+'%)</strong> — sweet spot for spread and chewy-crisp edges.');
+  else if(fat)lines.push('<strong>Lean fat ('+fat.toFixed(0)+'%)</strong> — less spread, thicker and more structured.');
+  if(brown!==null){
+    if(brown>=70)lines.push('<strong>Brown sugar dominant ('+brown.toFixed(0)+'%)</strong> — deep caramel flavour, chewy moist interior.');
+    else if(brown>=45)lines.push('<strong>Balanced sugar split ('+brown.toFixed(0)+'% brown)</strong> — depth from molasses, snap from white sugar.');
+    else if(brown!==null)lines.push('<strong>White sugar dominant ('+(100-brown).toFixed(0)+'% white)</strong> — more spread, crunch, cleaner flavour.');
+  }
+  if(r.hasExtraYolks)lines.push('<strong>Extra yolks</strong> — fudgy, dense, richer golden colour.');
+  else if(egg>=55)lines.push('<strong>High egg ('+egg.toFixed(0)+'%)</strong> — puffier, more cakey structure.');
+  else if(egg>=35)lines.push('<strong>Standard egg ('+egg.toFixed(0)+'%)</strong> — balanced moisture and binding.');
+  if(bicarbG>0&&bpG>0)lines.push('<strong>Dual leavening</strong> — bicarb drives browning and spread; baking powder adds neutral lift. Chewy-edged with some rise.');
+  else if(bicarbG>0){
+    if(r.bicarb>1.4)lines.push('<strong>High bicarb ('+r.bicarb.toFixed(1)+'%)</strong> — very active browning; watch for soapy off-notes.');
+    else if(r.bicarb>=0.8)lines.push('<strong>Bicarb in range ('+r.bicarb.toFixed(1)+'%)</strong> — good Maillard browning, crispier edges.');
+    else lines.push('<strong>Low bicarb ('+r.bicarb.toFixed(1)+'%)</strong> — minimal browning boost; denser result.');
+  }else if(bpG>0)lines.push('<strong>Baking powder only ('+r.bpowder.toFixed(1)+'%)</strong> — neutral lift, puffier more cakey texture.');
+  if(r.chocPct>=110)lines.push('<strong>Heavy chocolate ('+r.chocPct.toFixed(0)+'%)</strong> — bakery-style, chocolate pools dominate.');
+  else if(r.chocPct>=70)lines.push('<strong>Generous chocolate ('+r.chocPct.toFixed(0)+'%)</strong> — every bite covered, well-balanced.');
+  else if(r.chocPct>0)lines.push('<strong>Moderate chocolate ('+r.chocPct.toFixed(0)+'%)</strong> — dough flavour remains prominent.');
+  return lines.map(l=>'<p>'+l+'</p>').join('');
 }
 
-function SmallInput({id,unitId,label,value,unit,onChange}){
-return <div style={{display:“flex”,flexDirection:“column”,gap:“0.3rem”}}>
-<label style={{fontSize:“0.6rem”,letterSpacing:“0.1em”,textTransform:“uppercase”,color:MUTED}}>{label}</label>
-<div style={{display:“flex”,border:“1px solid “+RULE,borderRadius:3,overflow:“hidden”,background:”#fff”}}>
-<input type=“number” min=“0” step=“0.25” placeholder={unit===“g”?“4”:“1”} value={value} onChange={e=>onChange(id,e.target.value)}
-style={{flex:1,padding:“0.5rem 0.4rem”,border:“none”,background:“transparent”,fontFamily:“monospace”,fontSize:“0.78rem”,color:INK,outline:“none”,width:“100%”,minWidth:0}}/>
-<select value={unit} onChange={e=>onChange(unitId,e.target.value)}
-style={{padding:“0 0.35rem”,border:“none”,borderLeft:“1px solid “+RULE,background:PARCHMENT,fontFamily:“monospace”,fontSize:“0.58rem”,color:WARM_MID,outline:“none”,cursor:“pointer”}}>
-<option value="tsp">tsp</option>
-<option value="tbsp">tbsp</option>
-<option value="g">g</option>
-</select>
-</div>
-
-  </div>;
+// ── HTML builders ─────────────────────────────────────────────────────────────
+function numInput(id,label,hint,placeholder,unit,step){
+  const u=unit||(id==='eggs'||id==='yolks'?'ct':'g');
+  return `<div class="field">
+    <label>${label}${hint?'<span>'+hint+'</span>':''}</label>
+    <div class="input-wrap">
+      <input type="number" min="0" step="${step||1}" placeholder="${placeholder}" value="${fields[id]||''}" oninput="setField('${id}',this.value)">
+      <span class="unit">${u}</span>
+    </div>
+  </div>`;
 }
 
-function EditorView({fields,onChange,recipeName,setRecipeName,recipeNotes,setRecipeNotes,onSave,editingId,saved}){
-const n=numify(fields),r=calcRatios(n);
-const doughTotal=n.flour+n.butter+n.brownSugar+n.whiteSugar+n.eggs*50+n.yolks*18+r.leavenG+r.saltG+n.choc+n.cream;
-const brownPct=r.totalSugar>0?Math.round(pct(n.brownSugar,r.totalSugar)):null;
-
-function buildProfile(){
-if(!n.flour)return null;
-const{fat,brown,egg,choc:ch}=r;const lines=[];
-if(fat>=75)lines.push(<span key="f"><strong style={{color:ACCENT}}>Very rich fat ({fat.toFixed(0)}%)</strong> — generously buttery, significant spread, thin crispy edges.</span>);
-else if(fat>=55)lines.push(<span key="f"><strong style={{color:ACCENT}}>Classic fat ({fat.toFixed(0)}%)</strong> — sweet spot for spread and chewy-crisp edges.</span>);
-else lines.push(<span key="f"><strong style={{color:ACCENT}}>Lean fat ({fat.toFixed(0)}%)</strong> — less spread, thicker and more structured.</span>);
-if(brown!==null){
-if(brown>=70)lines.push(<span key="b"><strong style={{color:ACCENT}}>Brown sugar dominant ({brown.toFixed(0)}%)</strong> — deep caramel flavour, chewy moist interior.</span>);
-else if(brown>=45)lines.push(<span key="b"><strong style={{color:ACCENT}}>Balanced sugar split ({brown.toFixed(0)}% brown)</strong> — depth from molasses, snap from white sugar.</span>);
-else lines.push(<span key="b"><strong style={{color:ACCENT}}>White sugar dominant ({(100-brown).toFixed(0)}% white)</strong> — more spread, crunch, cleaner flavour.</span>);
-}
-if(r.hasExtraYolks)lines.push(<span key="y"><strong style={{color:ACCENT}}>Extra yolks</strong> — fudgy, dense, richer golden colour.</span>);
-else if(egg>=55)lines.push(<span key="e"><strong style={{color:ACCENT}}>High egg ({egg.toFixed(0)}%)</strong> — puffier, more cakey structure.</span>);
-else if(egg>=35)lines.push(<span key="e"><strong style={{color:ACCENT}}>Standard egg ({egg.toFixed(0)}%)</strong> — balanced moisture and binding.</span>);
-if(r.bicarbG>0&&r.bpG>0)lines.push(<span key="bi"><strong style={{color:ACCENT}}>Dual leavening</strong> — bicarb drives browning and spread; baking powder adds neutral lift. Chewy-edged with some rise.</span>);
-else if(r.bicarbG>0){
-if(r.bicarb>1.4)lines.push(<span key="bi"><strong style={{color:ACCENT}}>High bicarb ({r.bicarb.toFixed(1)}%)</strong> — very active browning; watch for soapy off-notes.</span>);
-else if(r.bicarb>=0.8)lines.push(<span key="bi"><strong style={{color:ACCENT}}>Bicarb in range ({r.bicarb.toFixed(1)}%)</strong> — good Maillard browning, crispier edges.</span>);
-else lines.push(<span key="bi"><strong style={{color:ACCENT}}>Low bicarb ({r.bicarb.toFixed(1)}%)</strong> — minimal browning boost; denser result.</span>);
-}else if(r.bpG>0)lines.push(<span key="bi"><strong style={{color:ACCENT}}>Baking powder only ({r.bpowder.toFixed(1)}%)</strong> — neutral lift, puffier more cakey texture.</span>);
-if(ch>=110)lines.push(<span key="c"><strong style={{color:ACCENT}}>Heavy chocolate ({ch.toFixed(0)}%)</strong> — bakery-style, chocolate pools dominate.</span>);
-else if(ch>=70)lines.push(<span key="c"><strong style={{color:ACCENT}}>Generous chocolate ({ch.toFixed(0)}%)</strong> — every bite covered, well-balanced.</span>);
-else if(ch>0)lines.push(<span key="c"><strong style={{color:ACCENT}}>Moderate chocolate ({ch.toFixed(0)}%)</strong> — dough flavour remains prominent.</span>);
-return lines.map((l,i)=><p key={i} style={{marginBottom:i<lines.length-1?“0.6rem”:0}}>{l}</p>);
+function smallInput(id,unitId,label){
+  const u=fields[unitId]||'tsp';
+  return `<div class="field">
+    <label>${label}</label>
+    <div class="input-wrap">
+      <input type="number" min="0" step="0.25" placeholder="${u==='g'?'4':'1'}" value="${fields[id]||''}" oninput="setField('${id}',this.value)">
+      <select onchange="setField('${unitId}',this.value)">
+        <option value="tsp"${u==='tsp'?' selected':''}>tsp</option>
+        <option value="tbsp"${u==='tbsp'?' selected':''}>tbsp</option>
+        <option value="g"${u==='g'?' selected':''}>g</option>
+      </select>
+    </div>
+  </div>`;
 }
 
-return <div>
-<div style={{background:”#fff”,border:“1px solid “+RULE,borderRadius:4,padding:“1.25rem 1.5rem”,marginBottom:“1.25rem”}}>
-<SL text="Recipe Name"/>
-<input type=“text” placeholder=“e.g. Kiley’s Crinkled Brown Butter CCC” value={recipeName} onChange={e=>setRecipeName(e.target.value)}
-style={{width:“100%”,padding:“0.55rem 0.65rem”,border:“1px solid “+RULE,borderRadius:3,fontFamily:“monospace”,fontSize:“0.82rem”,color:INK,outline:“none”,boxSizing:“border-box”,background:PARCHMENT}}/>
-</div>
-<div style={{background:”#fff”,border:“1px solid “+RULE,borderRadius:4,padding:“1.25rem 1.5rem”,marginBottom:“1.25rem”}}>
-<SL text="Base Ingredients"/>
-<div style={{display:“grid”,gridTemplateColumns:“1fr 1fr”,gap:“0.85rem”}}>
-<NumInput id="flour" label="Flour" hint="base = 100%" placeholder="240" value={fields.flour} onChange={onChange}/>
-<NumInput id="butter" label="Butter" hint="fat" placeholder="170" value={fields.butter} onChange={onChange}/>
-<NumInput id="brownSugar" label="Brown Sugar" placeholder="165" value={fields.brownSugar} onChange={onChange}/>
-<NumInput id="whiteSugar" label="White Sugar" placeholder="100" value={fields.whiteSugar} onChange={onChange}/>
-<NumInput id="eggs" label="Whole Eggs" hint="count" placeholder="2" value={fields.eggs} onChange={onChange}/>
-<NumInput id="yolks" label="Egg Yolks" hint="extra, if any" placeholder="0" value={fields.yolks} onChange={onChange}/>
-</div>
-<div style={{marginTop:“1rem”,paddingTop:“1rem”,borderTop:“1px dashed “+RULE}}>
-<SL text="Mix-ins & Leavening"/>
-<div style={{display:“grid”,gridTemplateColumns:“1fr 1fr”,gap:“0.75rem”,marginBottom:“0.75rem”}}>
-<NumInput id="choc" label="Chocolate" placeholder="300" value={fields.choc} onChange={onChange}/>
-<NumInput id="cream" label="Cream / Milk" hint="optional" placeholder="30" value={fields.cream} onChange={onChange} unit="ml"/>
-</div>
-<div style={{display:“grid”,gridTemplateColumns:“1fr 1fr 1fr”,gap:“0.75rem”}}>
-<SmallInput id="bicarb" unitId="bicarbUnit" label="Baking Soda" value={fields.bicarb} unit={fields.bicarbUnit} onChange={onChange}/>
-<SmallInput id="bakingPowder" unitId="bakingPowderUnit" label="Baking Powder" value={fields.bakingPowder} unit={fields.bakingPowderUnit} onChange={onChange}/>
-<SmallInput id="salt" unitId="saltUnit" label="Salt" value={fields.salt} unit={fields.saltUnit} onChange={onChange}/>
-</div>
-</div>
-</div>
-<div style={{background:INK,borderRadius:4,padding:“0.85rem 1.25rem”,marginBottom:“1.25rem”,display:“grid”,gridTemplateColumns:“1fr 1fr 1fr 1fr”,gap:“0.5rem”}}>
-{[{val:doughTotal>0?Math.round(doughTotal)+“g”:”—”,label:“Dough”},{val:brownPct!==null?brownPct+”:”+(100-brownPct):”—”,label:“Sugar B:W”},{val:n.flour&&n.choc?Math.round(r.choc)+”%”:”—”,label:“Choc %”},{val:getProfile(r),label:“Profile”}].map(item=>(
-<div key={item.label} style={{textAlign:“center”}}>
-<div style={{fontFamily:“Georgia, serif”,fontSize:“1.1rem”,color:ACCENT_LIGHT}}>{item.val}</div>
-<div style={{fontSize:“0.52rem”,letterSpacing:“0.1em”,textTransform:“uppercase”,color:WARM_MID,marginTop:“0.2rem”}}>{item.label}</div>
-</div>
-))}
-</div>
-{RATIO_CONFIGS.map(cfg=>{
-const value=r[cfg.key],barW=value!==null?Math.min(100,(value/cfg.maxPct)*100):0,status=getStatus(value,cfg.thresholds);
-return <div key={cfg.key} style={{background:”#fff”,border:“1px solid “+RULE,borderRadius:4,padding:“1.1rem 1.25rem”,marginBottom:“0.65rem”}}>
-<div style={{display:“flex”,justifyContent:“space-between”,alignItems:“flex-start”,marginBottom:“0.4rem”}}>
-<div>
-<div style={{fontSize:“0.58rem”,letterSpacing:“0.18em”,textTransform:“uppercase”,color:ACCENT,marginBottom:“0.2rem”}}>{cfg.label}</div>
-<div style={{fontFamily:“Georgia, serif”,fontSize:“0.95rem”,color:INK}}>{cfg.name}</div>
-</div>
-<div style={{fontSize:“1.3rem”,fontWeight:500,color:ACCENT,letterSpacing:”-0.02em”}}>
-{value!==null?value.toFixed(1):”—”}<span style={{fontSize:“0.65rem”,color:MUTED,fontWeight:300}}>%</span>
-</div>
-</div>
-<div style={{fontSize:“0.63rem”,color:MUTED,lineHeight:1.6,marginBottom:“0.6rem”}}>{cfg.desc}</div>
-<div style={{position:“relative”,height:6,background:PARCHMENT,borderRadius:99,marginBottom:“0.25rem”}}>
-<div style={{position:“absolute”,inset:0,borderRadius:99,overflow:“hidden”}}>
-<div style={{height:“100%”,width:barW+”%”,background:cfg.barColor,borderRadius:99,transition:“width 0.5s cubic-bezier(0.34,1.56,0.64,1)”}}/>
-</div>
-{cfg.markers.map(m=><div key={m} style={{position:“absolute”,top:-3,left:m+”%”,width:2,height:12,background:RULE,transform:“translateX(-50%)”}}/>)}
-</div>
-<div style={{display:“flex”,justifyContent:“space-between”,fontSize:“0.55rem”,color:WARM_MID,marginBottom:“0.4rem”}}>
-{cfg.markerLabels.map(l=><span key={l}>{l}</span>)}
-</div>
-<span style={{display:“inline-block”,fontSize:“0.55rem”,letterSpacing:“0.1em”,textTransform:“uppercase”,padding:“0.12rem 0.45rem”,borderRadius:2,fontWeight:500,background:status.bg,color:status.color}}>{status.label}</span>
-</div>;
-})}
-<div style={{background:”#fff”,border:“1px solid “+RULE,borderRadius:4,padding:“1.25rem 1.5rem”,marginBottom:“1.25rem”}}>
-<SL text="Cookie Profile"/>
-{n.flour?<div style={{fontSize:“0.72rem”,lineHeight:1.9,color:INK}}>{buildProfile()}</div>
-:<div style={{fontSize:“0.68rem”,color:WARM_MID,fontStyle:“italic”,textAlign:“center”}}>Enter ingredient weights above to generate a profile reading.</div>}
-</div>
-<div style={{background:”#fff”,border:“1px solid “+RULE,borderRadius:4,padding:“1.25rem 1.5rem”,marginBottom:“1.25rem”}}>
-<SL text="Notes"/>
-<textarea value={recipeNotes} onChange={e=>setRecipeNotes(e.target.value)} placeholder=“Technique, resting time, pan type, observations after baking…”
-style={{width:“100%”,minHeight:80,border:“1px solid “+RULE,borderRadius:3,padding:“0.6rem”,fontFamily:“monospace”,fontSize:“0.72rem”,color:INK,background:PARCHMENT,resize:“vertical”,outline:“none”,lineHeight:1.7,boxSizing:“border-box”}}/>
-</div>
-<button onClick={onSave} disabled={!recipeName.trim()}
-style={{width:“100%”,padding:“0.85rem”,background:saved?GOOD:(recipeName.trim()?ACCENT:WARM_MID),border:“none”,borderRadius:4,color:”#fff”,fontFamily:“monospace”,fontSize:“0.7rem”,letterSpacing:“0.15em”,textTransform:“uppercase”,cursor:recipeName.trim()?“pointer”:“not-allowed”,transition:“background 0.3s”}}>
-{saved?“✓ Saved”:(editingId?“Update Recipe”:“Save Recipe”)}
-</button>
-
-  </div>;
+function ratioBar(r,cfg){
+  const val=r[cfg.key];
+  const barW=val!==null?Math.min(100,(val/cfg.max)*100):0;
+  const st=getStatus(val,cfg.t);
+  const valStr=val!==null?val.toFixed(1):'—';
+  return `<div class="ratio-card">
+    <div class="ratio-head">
+      <div><div class="ratio-label">${cfg.label}</div><div class="ratio-name">${cfg.name}</div></div>
+      <div class="ratio-val">${valStr}<span>%</span></div>
+    </div>
+    <div class="ratio-desc">${cfg.desc}</div>
+    <div class="bar-wrap">
+      <div class="bar-track"><div class="bar-fill" style="width:${barW}%;background:${cfg.color}"></div></div>
+      ${cfg.m.map(m=>`<div class="bar-marker" style="left:${m}%"></div>`).join('')}
+    </div>
+    <div class="bar-labels">${cfg.ml.map(l=>`<span>${l}</span>`).join('')}</div>
+    <span class="status-tag" style="background:${st.bg};color:${st.color}">${st.label}</span>
+  </div>`;
 }
 
-function ListView({recipes,editingId,compareIds,onLoad,onDelete,onToggleCompare,onNew,onCompare}){
-return <div>
-<button onClick={onNew} style={{width:“100%”,padding:“0.65rem”,background:“none”,border:“1px dashed “+WARM_MID,borderRadius:4,color:MUTED,fontFamily:“monospace”,fontSize:“0.62rem”,letterSpacing:“0.12em”,textTransform:“uppercase”,cursor:“pointer”,marginBottom:“1rem”}}>+ New Recipe</button>
-{recipes.length===0?<div style={{textAlign:“center”,padding:“3rem 1rem”,color:WARM_MID,fontSize:“0.75rem”,fontStyle:“italic”}}>No saved recipes yet. Enter a recipe and hit Save.</div>
-:<>
-<div style={{fontSize:“0.62rem”,color:MUTED,marginBottom:“0.75rem”}}>Tap to load · tick to compare</div>
-{recipes.map(recipe=>{
-const n=numify({…EMPTY,…recipe.fields}),r=calcRatios(n);
-return <div key={recipe.id} style={{background:”#fff”,border:“1px solid “+(editingId===recipe.id?ACCENT_LIGHT:RULE),borderRadius:4,padding:“1rem 1.25rem”,marginBottom:“0.65rem”,display:“flex”,alignItems:“flex-start”,gap:“0.75rem”}}>
-<input type=“checkbox” checked={compareIds.includes(recipe.id)} onChange={()=>onToggleCompare(recipe.id)} style={{marginTop:“0.25rem”,accentColor:ACCENT,flexShrink:0,width:16,height:16}}/>
-<div style={{flex:1,minWidth:0,cursor:“pointer”}} onClick={()=>onLoad(recipe)}>
-<div style={{fontFamily:“Georgia, serif”,fontSize:“0.95rem”,color:INK,marginBottom:“0.35rem”}}>{recipe.name}</div>
-<div style={{display:“flex”,gap:“0.4rem”,flexWrap:“wrap”}}>
-{RATIO_CONFIGS.slice(0,4).map(cfg=>r[cfg.key]!==null?<span key={cfg.key} style={{fontSize:“0.57rem”,background:PARCHMENT,color:MUTED,padding:“0.1rem 0.4rem”,borderRadius:2}}>{cfg.label} {r[cfg.key].toFixed(0)}%</span>:null)}
-<span style={{fontSize:“0.57rem”,background:PARCHMENT,color:ACCENT,padding:“0.1rem 0.4rem”,borderRadius:2,fontWeight:500}}>{getProfile(r)}</span>
-</div>
-</div>
-<button onClick={()=>onDelete(recipe.id)} style={{background:“none”,border:“none”,color:WARM_MID,cursor:“pointer”,fontSize:“1.1rem”,padding:“0 0.2rem”,flexShrink:0,lineHeight:1}}>×</button>
-</div>;
-})}
-{compareIds.length>=2&&<button onClick={onCompare} style={{width:“100%”,padding:“0.75rem”,background:ACCENT,border:“none”,borderRadius:4,color:”#fff”,fontFamily:“monospace”,fontSize:“0.7rem”,letterSpacing:“0.15em”,textTransform:“uppercase”,cursor:“pointer”,marginTop:“0.5rem”}}>Compare {compareIds.length} Recipes →</button>}
-</>}
+// ── Views ─────────────────────────────────────────────────────────────────────
+function editorHTML(){
+  const r=calc(fields);
+  const doughTotal=r.flour+r.butter+r.totalSugar+r.totalEgg+r.leavenG+r.saltG+r.choc+r.cream;
+  const brownPct=r.totalSugar>0?Math.round(pct(nf(fields,'brownSugar'),r.totalSugar)):null;
+  const saveBg=saved?GOOD:(recipeName.trim()?ACCENT:WARM_MID);
+  const saveTxt=saved?'✓ Saved':(editingId?'Update Recipe':'Save Recipe');
+  return `
+  <div class="card">
+    <div class="sl">Recipe Name</div>
+    <div class="input-wrap"><input type="text" placeholder="e.g. Kiley's Crinkled Brown Butter CCC" value="${escH(recipeName)}" oninput="setName(this.value)" style="flex:1;padding:0.55rem 0.65rem;border:none;background:#f5f0e8;font-family:monospace;font-size:0.82rem;color:#1a1714;outline:none;"></div>
+  </div>
+  <div class="card">
+    <div class="sl">Base Ingredients</div>
+    <div class="grid2">
+      ${numInput('flour','Flour','base = 100%','240')}
+      ${numInput('butter','Butter','fat','170')}
+      ${numInput('brownSugar','Brown Sugar','','165')}
+      ${numInput('whiteSugar','White Sugar','','100')}
+      ${numInput('eggs','Whole Eggs','count','2')}
+      ${numInput('yolks','Egg Yolks','extra, if any','0')}
+    </div>
+    <div class="mixins-sep">
+      <div class="sl">Mix-ins &amp; Leavening</div>
+      <div class="grid2b">
+        ${numInput('choc','Chocolate','','300')}
+        ${numInput('cream','Cream / Milk','optional','30','ml')}
+      </div>
+      <div class="grid3">
+        ${smallInput('bicarb','bicarbUnit','Baking Soda')}
+        ${smallInput('bakingPowder','bakingPowderUnit','Baking Powder')}
+        ${smallInput('salt','saltUnit','Salt')}
+      </div>
+    </div>
+  </div>
+  <div class="card-dark">
+    <div class="summary-item"><span class="summary-val">${doughTotal>0?Math.round(doughTotal)+'g':'—'}</span><span class="summary-label">Dough</span></div>
+    <div class="summary-item"><span class="summary-val">${brownPct!==null?brownPct+':'+(100-brownPct):'—'}</span><span class="summary-label">Sugar B:W</span></div>
+    <div class="summary-item"><span class="summary-val">${r.flour&&r.choc?Math.round(r.chocPct)+'%':'—'}</span><span class="summary-label">Choc %</span></div>
+    <div class="summary-item"><span class="summary-val">${getProfile(r)}</span><span class="summary-label">Profile</span></div>
+  </div>
+  ${RATIOS.map(cfg=>ratioBar(r,cfg)).join('')}
+  <div class="card">
+    <div class="sl">Cookie Profile</div>
+    <div class="profile-text">${buildProfile(r)}</div>
+  </div>
+  <div class="card">
+    <div class="sl">Notes</div>
+    <textarea placeholder="Technique, resting time, pan type, observations after baking..." oninput="setNotes(this.value)">${escH(recipeNotes)}</textarea>
 
-  </div>;
+  </div>
+  <button class="save-btn" style="background:${saveBg}" onclick="saveRecipe()">${saveTxt}</button>`;
 }
 
-function CompareView({recipes,compareIds}){
+function listHTML(){
+let html=`<button class="new-btn" onclick="newRecipe()">+ New Recipe</button>`;
+if(recipes.length===0){html+=`<div class="empty">No saved recipes yet. Enter a recipe and hit Save.</div>`;return html;}
+html+=`<div style="font-size:0.62rem;color:#7a7065;margin-bottom:0.75rem;">Tap to load · tick to compare</div>`;
+recipes.forEach(recipe=>{
+const r=calc({…EMPTY,…recipe.fields});
+const chk=compareIds.includes(recipe.id);
+const activeClass=editingId===recipe.id?’ active’:’’;
+const tags=RATIOS.slice(0,4).map(cfg=>r[cfg.key]!==null?`<span class="tag">${cfg.label} ${r[cfg.key].toFixed(0)}%</span>`:’’).join(’’);
+html+=`<div class="recipe-item${activeClass}"> <input type="checkbox" ${chk?'checked':''} onchange="toggleCompare('${recipe.id}')" style="margin-top:0.25rem;accent-color:#8b4513;flex-shrink:0;width:16px;height:16px;"> <div style="flex:1;min-width:0;cursor:pointer;" onclick="loadRecipe('${recipe.id}')"> <div style="font-family:Georgia,serif;font-size:0.95rem;color:#1a1714;">${escH(recipe.name)}</div> <div class="recipe-tags">${tags}<span class="tag profile">${getProfile(r)}</span></div> </div> <button onclick="deleteRecipe('${recipe.id}')" style="background:none;border:none;color:#c8b99a;cursor:pointer;font-size:1.1rem;padding:0 0.2rem;flex-shrink:0;line-height:1;">×</button> </div>`;
+});
+if(compareIds.length>=2)html+=`<button class="compare-btn" onclick="setView('compare')">Compare ${compareIds.length} Recipes →</button>`;
+return html;
+}
+
+function compareHTML(){
 const selected=recipes.filter(r=>compareIds.includes(r.id));
-return <div>
-<div style={{background:”#fff”,border:“1px solid “+RULE,borderRadius:4,padding:“0.85rem 1.25rem”,marginBottom:“1.25rem”,display:“flex”,flexWrap:“wrap”,gap:“0.6rem”}}>
-{selected.map((r,i)=><div key={r.id} style={{display:“flex”,alignItems:“center”,gap:“0.4rem”}}><div style={{width:10,height:10,borderRadius:2,background:COMPARE_COLORS[i%COMPARE_COLORS.length],flexShrink:0}}/><span style={{fontSize:“0.62rem”,color:INK}}>{r.name}</span></div>)}
-</div>
-{RATIO_CONFIGS.map(cfg=><div key={cfg.key} style={{background:”#fff”,border:“1px solid “+RULE,borderRadius:4,padding:“1rem 1.25rem”,marginBottom:“0.65rem”}}>
-<div style={{marginBottom:“0.75rem”}}>
-<div style={{fontSize:“0.58rem”,letterSpacing:“0.15em”,textTransform:“uppercase”,color:ACCENT,marginBottom:“0.15rem”}}>{cfg.label}</div>
-<div style={{fontFamily:“Georgia, serif”,fontSize:“0.9rem”,color:INK}}>{cfg.name}</div>
-</div>
-<div style={{display:“flex”,flexDirection:“column”,gap:“0.55rem”}}>
-{selected.map((recipe,i)=>{
-const n=numify({…EMPTY,…recipe.fields}),rv=calcRatios(n)[cfg.key],barW=rv!==null?Math.min(100,(rv/cfg.maxPct)*100):0,color=COMPARE_COLORS[i%COMPARE_COLORS.length];
-return <div key={recipe.id}>
-<div style={{display:“flex”,justifyContent:“space-between”,alignItems:“center”,marginBottom:“0.2rem”}}>
-<span style={{fontSize:“0.6rem”,color:MUTED,display:“flex”,alignItems:“center”,gap:“0.35rem”}}>
-<span style={{width:8,height:8,borderRadius:1,background:color,display:“inline-block”,flexShrink:0}}/>{recipe.name}
-</span>
-<span style={{fontSize:“0.65rem”,fontWeight:500,color:ACCENT}}>{rv!==null?rv.toFixed(1)+”%”:”—”}</span>
-</div>
-<div style={{position:“relative”,height:8,background:PARCHMENT,borderRadius:99}}>
-<div style={{position:“absolute”,inset:0,borderRadius:99,overflow:“hidden”}}><div style={{height:“100%”,width:barW+”%”,background:color,borderRadius:99}}/></div>
-{cfg.markers.map(m=><div key={m} style={{position:“absolute”,top:-2,left:m+”%”,width:1,height:12,background:RULE,transform:“translateX(-50%)”}}/>)}
-</div>
-</div>;
-})}
-</div>
-<div style={{display:“flex”,justifyContent:“space-between”,fontSize:“0.52rem”,color:WARM_MID,marginTop:“0.35rem”}}>{cfg.markerLabels.map(l=><span key={l}>{l}</span>)}</div>
-</div>)}
-<div style={{background:”#fff”,border:“1px solid “+RULE,borderRadius:4,padding:“1rem 1.25rem”}}>
-<SL text="Profile Summary"/>
-{selected.map((recipe,i)=>{
-const n=numify({…EMPTY,…recipe.fields}),rv=calcRatios(n),color=COMPARE_COLORS[i%COMPARE_COLORS.length];
-return <div key={recipe.id} style={{display:“flex”,alignItems:“center”,gap:“0.75rem”,marginBottom:i<selected.length-1?“0.75rem”:0,paddingBottom:i<selected.length-1?“0.75rem”:0,borderBottom:i<selected.length-1?“1px dashed “+RULE:“none”}}>
-<div style={{width:10,height:10,borderRadius:2,background:color,flexShrink:0}}/>
-<div>
-<div style={{fontSize:“0.7rem”,color:INK,fontFamily:“Georgia, serif”,marginBottom:“0.2rem”}}>{recipe.name}</div>
-<div style={{fontSize:“0.6rem”,color:MUTED}}>{getProfile(rv)} · Fat {rv.fat?rv.fat.toFixed(0):”—”}% · Sugar {rv.sugar?rv.sugar.toFixed(0):”—”}% · Choc {rv.choc?rv.choc.toFixed(0):”—”}%</div>
-</div>
-</div>;
-})}
-</div>
-
-  </div>;
+let html=`<div class="legend">${selected.map((r,i)=>`<div class="legend-item"><div class="legend-dot" style="background:${COMPARE_COLORS[i%COMPARE_COLORS.length]}"></div><span class="legend-name">${escH(r.name)}</span></div>`).join('')}</div>`;
+RATIOS.forEach(cfg=>{
+html+=`<div class="compare-card"><div style="margin-bottom:0.75rem;"><div style="font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:#8b4513;margin-bottom:0.15rem;">${cfg.label}</div><div style="font-family:Georgia,serif;font-size:0.9rem;color:#1a1714;">${cfg.name}</div></div>`;
+selected.forEach((recipe,i)=>{
+const r=calc({…EMPTY,…recipe.fields});
+const val=r[cfg.key];
+const barW=val!==null?Math.min(100,(val/cfg.max)*100):0;
+const color=COMPARE_COLORS[i%COMPARE_COLORS.length];
+html+=`<div class="compare-row"> <div class="compare-row-head"> <span class="compare-row-name"><span class="compare-dot" style="background:${color}"></span>${escH(recipe.name)}</span> <span class="compare-row-val">${val!==null?val.toFixed(1)+'%':'—'}</span> </div> <div class="compare-bar"> <div class="compare-bar-fill" style="width:${barW}%;background:${color}"></div> ${cfg.m.map(m=>`<div class="compare-marker" style="left:${m}%"></div>`).join('')} </div> </div>`;
+});
+html+=`<div style="display:flex;justify-content:space-between;font-size:0.52rem;color:#c8b99a;margin-top:0.35rem;">${cfg.ml.map(l=>`<span>${l}</span>`).join('')}</div></div>`;
+});
+// Profile summary
+html+=`<div class="card"><div class="sl">Profile Summary</div>`;
+selected.forEach((recipe,i)=>{
+const r=calc({…EMPTY,…recipe.fields});
+const color=COMPARE_COLORS[i%COMPARE_COLORS.length];
+const sep=i<selected.length-1?‘border-bottom:1px dashed #ddd5c5;margin-bottom:0.75rem;padding-bottom:0.75rem;’:’’;
+html+=`<div style="display:flex;align-items:center;gap:0.75rem;${sep}"> <div style="width:10px;height:10px;border-radius:2px;background:${color};flex-shrink:0;"></div> <div> <div style="font-size:0.7rem;color:#1a1714;font-family:Georgia,serif;margin-bottom:0.2rem;">${escH(recipe.name)}</div> <div style="font-size:0.6rem;color:#7a7065;">${getProfile(r)} · Fat ${r.fat?r.fat.toFixed(0):'—'}% · Sugar ${r.sugar?r.sugar.toFixed(0):'—'}% · Choc ${r.chocPct?r.chocPct.toFixed(0):'—'}%</div> </div> </div>`;
+});
+html+=`</div>`;
+return html;
 }
 
-function App(){
-const[view,setView]=useState(“editor”);
-const[recipes,setRecipes]=useState(()=>storageGet(“cct-recipes”)||[]);
-const[fields,setFields]=useState(EMPTY);
-const[recipeName,setRecipeName]=useState(””);
-const[recipeNotes,setRecipeNotes]=useState(””);
-const[editingId,setEditingId]=useState(null);
-const[compareIds,setCompareIds]=useState([]);
-const[saved,setSaved]=useState(false);
-const[showTransfer,setShowTransfer]=useState(false);
-const[transferText,setTransferText]=useState(””);
-const[transferMsg,setTransferMsg]=useState(””);
+function transferHTML(){
+return `<div class="transfer-panel"> <div style="font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:#8b4513;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;"> <span>Export / Import Recipes</span> <button onclick="toggleTransfer()" style="background:none;border:none;color:#c8b99a;cursor:pointer;font-size:1rem;line-height:1;">×</button> </div> <div class="transfer-btns"> <button class="transfer-export" onclick="exportRecipes()">Export</button> <button class="transfer-import" style="background:${transferText.trim()?ACCENT:WARM_MID};cursor:${transferText.trim()?'pointer':'not-allowed'}" onclick="importRecipes()">Import</button> </div> <textarea class="transfer-textarea" placeholder="Paste exported recipe data here to import..." oninput="transferText=this.value;render()">${escH(transferText)}</textarea> ${transferMsg?`<div class="transfer-msg">${escH(transferMsg)}</div>`:’’}
 
-const handleChange=useCallback((id,val)=>{setFields(f=>({…f,[id]:val}));setSaved(false);},[]);
+  </div>`;
+}
+
+// ── Actions ───────────────────────────────────────────────────────────────────
+function escH(s){return String(s||’’).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’"’);}
+function setField(k,v){fields[k]=v;saved=false;render();}
+function setName(v){recipeName=v;saved=false;render();}
+function setNotes(v){recipeNotes=v;}
+function setView(v){view=v;render();}
+
+function saveRecipe(){
+if(!recipeName.trim())return;
+const recipe={id:editingId||Date.now().toString(),name:recipeName.trim(),notes:recipeNotes,fields:{…fields},savedAt:Date.now()};
+recipes=editingId?recipes.map(r=>r.id===editingId?recipe:r):[…recipes,recipe];
+save(recipes);editingId=recipe.id;saved=true;render();
+}
+
+function loadRecipe(id){
+const recipe=recipes.find(r=>r.id===id);if(!recipe)return;
+fields={…EMPTY,…recipe.fields};recipeName=recipe.name;recipeNotes=recipe.notes||’’;editingId=recipe.id;saved=true;view=‘editor’;render();
+}
+
+function deleteRecipe(id){
+if(!confirm(‘Delete this recipe?’))return;
+recipes=recipes.filter(r=>r.id!==id);save(recipes);
+if(editingId===id){fields={…EMPTY};recipeName=’’;recipeNotes=’’;editingId=null;saved=false;}
+compareIds=compareIds.filter(i=>i!==id);render();
+}
+
+function newRecipe(){fields={…EMPTY};recipeName=’’;recipeNotes=’’;editingId=null;saved=false;view=‘editor’;render();}
+
+function toggleCompare(id){
+compareIds=compareIds.includes(id)?compareIds.filter(i=>i!==id):[…compareIds,id];render();
+}
+
+function toggleTransfer(){
+showTransfer=!showTransfer;transferText=’’;transferMsg=’’;render();
+}
 
 function exportRecipes(){
-if(recipes.length===0){setTransferMsg(“No recipes to export.”);return;}
-setTransferText(JSON.stringify(recipes,null,2));
-setTransferMsg(“Copy all the text below, then paste it into Import on any device.”);
+if(recipes.length===0){transferMsg=‘No recipes to export.’;render();return;}
+transferText=JSON.stringify(recipes,null,2);
+transferMsg=‘Copy all the text below, then paste it into Import on any device.’;
+render();
+// Select the textarea content
+setTimeout(()=>{const ta=document.querySelector(’.transfer-textarea’);if(ta){ta.select();}},100);
 }
+
 function importRecipes(){
 try{
 const parsed=JSON.parse(transferText);
 if(!Array.isArray(parsed))throw new Error();
 const merged=[…recipes];
 parsed.forEach(inc=>{if(!merged.find(r=>r.id===inc.id))merged.push(inc);});
-setRecipes(merged);storageSet(“cct-recipes”,merged);
-setTransferMsg(“Imported “+parsed.length+” recipe(s).”);setTransferText(””);
-}catch(e){setTransferMsg(“Could not read that data. Make sure you copied the full export text.”);}
+recipes=merged;save(recipes);
+transferMsg=‘Imported ‘+parsed.length+’ recipe(s).’;transferText=’’;render();
+}catch(e){transferMsg=‘Could not read that data. Make sure you copied the full export text.’;render();}
 }
-function saveRecipe(){
-if(!recipeName.trim())return;
-const recipe={id:editingId||Date.now().toString(),name:recipeName.trim(),notes:recipeNotes,fields:{…fields},savedAt:Date.now()};
-const updated=editingId?recipes.map(r=>r.id===editingId?recipe:r):[…recipes,recipe];
-setRecipes(updated);storageSet(“cct-recipes”,updated);setEditingId(recipe.id);setSaved(true);
-}
-function loadRecipe(recipe){setFields({…EMPTY,…recipe.fields});setRecipeName(recipe.name);setRecipeNotes(recipe.notes||””);setEditingId(recipe.id);setSaved(true);setView(“editor”);}
-function deleteRecipe(id){
-const updated=recipes.filter(r=>r.id!==id);setRecipes(updated);storageSet(“cct-recipes”,updated);
-if(editingId===id){setFields(EMPTY);setRecipeName(””);setRecipeNotes(””);setEditingId(null);setSaved(false);}
-setCompareIds(ids=>ids.filter(i=>i!==id));
-}
-function newRecipe(){setFields(EMPTY);setRecipeName(””);setRecipeNotes(””);setEditingId(null);setSaved(false);setView(“editor”);}
 
-const tabs=[
-{id:“editor”,label:editingId?“Edit”:“New”},
-{id:“list”,label:recipes.length>0?“Recipes (”+recipes.length+”)”:“Recipes”},
-{id:“compare”,label:compareIds.length>0?“Compare (”+compareIds.length+”)”:“Compare”,disabled:compareIds.length<2},
+// ── Render ────────────────────────────────────────────────────────────────────
+function render(){
+// Tabs
+const tabDefs=[
+{id:‘editor’,label:editingId?‘Edit’:‘New’,disabled:false},
+{id:‘list’,label:recipes.length>0?‘Recipes (’+recipes.length+’)’:‘Recipes’,disabled:false},
+{id:‘compare’,label:compareIds.length>0?‘Compare (’+compareIds.length+’)’:‘Compare’,disabled:compareIds.length<2},
 ];
+document.getElementById(‘tabs’).innerHTML=tabDefs.map(t=>`<button class="tab${view===t.id?' active':''}" ${t.disabled?'disabled':''} onclick="setView('${t.id}')">${t.label}</button>`).join(’’);
 
-return <div style={{background:PARCHMENT,minHeight:“100vh”,paddingBottom:“3rem”,fontFamily:“monospace”,backgroundImage:“radial-gradient(ellipse at 20% 0%, rgba(139,69,19,0.06) 0%, transparent 50%)”}}>
-<div style={{textAlign:“center”,padding:“1.5rem 1rem 1.25rem”,borderBottom:“1px solid “+RULE}}>
-<div style={{fontSize:“0.58rem”,letterSpacing:“0.2em”,textTransform:“uppercase”,color:ACCENT_LIGHT,marginBottom:“0.4rem”}}>Baker’s Ratio Tracker</div>
-<h1 style={{fontFamily:“Georgia, serif”,fontSize:“clamp(1.4rem,4vw,1.9rem)”,fontWeight:400,color:INK,margin:0}}>Chocolate Chip <em style={{color:ACCENT}}>Cookie</em> Ratios</h1>
-<div style={{width:40,height:2,background:ACCENT,margin:“0.75rem auto 0”}}/>
-</div>
-<div style={{display:“flex”,borderBottom:“1px solid “+RULE,background:”#fff”}}>
-{tabs.map(tab=><button key={tab.id} onClick={()=>!tab.disabled&&setView(tab.id)} disabled={tab.disabled}
-style={{flex:1,padding:“0.75rem 0.5rem”,background:“none”,border:“none”,borderBottom:view===tab.id?“2px solid “+ACCENT:“2px solid transparent”,color:tab.disabled?WARM_MID:(view===tab.id?ACCENT:MUTED),fontFamily:“monospace”,fontSize:“0.62rem”,letterSpacing:“0.1em”,textTransform:“uppercase”,cursor:tab.disabled?“not-allowed”:“pointer”}}>
-{tab.label}
-</button>)}
-</div>
-<div style={{textAlign:“right”,padding:“0.4rem 1rem”,background:”#fff”,borderBottom:“1px solid “+RULE}}>
-<button onClick={()=>{setShowTransfer(s=>!s);setTransferText(””);setTransferMsg(””);}}
-style={{background:“none”,border:“none”,color:showTransfer?ACCENT:WARM_MID,fontFamily:“monospace”,fontSize:“0.6rem”,letterSpacing:“0.1em”,textTransform:“uppercase”,cursor:“pointer”,textDecoration:“underline”}}>
-{showTransfer?“Hide Export / Import”:“Export / Import recipes”}
-</button>
-</div>
-<div style={{maxWidth:700,margin:“0 auto”,padding:“1.25rem 1rem 0”}}>
-{showTransfer&&<div style={{background:”#fff”,border:“1px solid “+RULE,borderRadius:4,padding:“1.25rem 1.5rem”,marginBottom:“1.25rem”}}>
-<div style={{fontSize:“0.58rem”,letterSpacing:“0.18em”,textTransform:“uppercase”,color:ACCENT,marginBottom:“1rem”,display:“flex”,justifyContent:“space-between”,alignItems:“center”}}>
-<span>Export / Import Recipes</span>
-<button onClick={()=>{setShowTransfer(false);setTransferText(””);setTransferMsg(””);}} style={{background:“none”,border:“none”,color:WARM_MID,cursor:“pointer”,fontSize:“1rem”,lineHeight:1}}>×</button>
-</div>
-<div style={{display:“flex”,gap:“0.6rem”,marginBottom:“0.75rem”}}>
-<button onClick={exportRecipes} style={{flex:1,padding:“0.55rem”,background:PARCHMENT,border:“1px solid “+RULE,borderRadius:3,fontFamily:“monospace”,fontSize:“0.62rem”,letterSpacing:“0.1em”,textTransform:“uppercase”,cursor:“pointer”,color:INK}}>Export</button>
-<button onClick={importRecipes} disabled={!transferText.trim()} style={{flex:1,padding:“0.55rem”,background:transferText.trim()?ACCENT:WARM_MID,border:“none”,borderRadius:3,fontFamily:“monospace”,fontSize:“0.62rem”,letterSpacing:“0.1em”,textTransform:“uppercase”,cursor:transferText.trim()?“pointer”:“not-allowed”,color:”#fff”}}>Import</button>
-</div>
-<textarea value={transferText} onChange={e=>setTransferText(e.target.value)} placeholder=“Paste exported recipe data here to import…”
-style={{width:“100%”,minHeight:120,border:“1px solid “+RULE,borderRadius:3,padding:“0.6rem”,fontFamily:“monospace”,fontSize:“0.65rem”,color:INK,background:PARCHMENT,resize:“vertical”,outline:“none”,lineHeight:1.6,boxSizing:“border-box”}}/>
-{transferMsg&&<div style={{fontSize:“0.65rem”,color:GOOD,marginTop:“0.5rem”}}>{transferMsg}</div>}
-</div>}
-{view===“editor”&&<EditorView fields={fields} onChange={handleChange} recipeName={recipeName} setRecipeName={setRecipeName} recipeNotes={recipeNotes} setRecipeNotes={setRecipeNotes} onSave={saveRecipe} editingId={editingId} saved={saved}/>}
-{view===“list”&&<ListView recipes={recipes} editingId={editingId} compareIds={compareIds} onLoad={loadRecipe} onDelete={deleteRecipe} onToggleCompare={id=>setCompareIds(ids=>ids.includes(id)?ids.filter(i=>i!==id):[…ids,id])} onNew={newRecipe} onCompare={()=>setView(“compare”)}/>}
-{view===“compare”&&<CompareView recipes={recipes} compareIds={compareIds}/>}
-</div>
+// Transfer toggle
+const tl=document.getElementById(‘transferToggle’);
+tl.textContent=showTransfer?‘Hide Export / Import’:‘Export / Import recipes’;
+tl.className=‘transfer-link’+(showTransfer?’ active’:’’);
 
-  </div>;
+// Content
+let html=showTransfer?transferHTML():’’;
+if(view===‘editor’)html+=editorHTML();
+else if(view===‘list’)html+=listHTML();
+else if(view===‘compare’)html+=compareHTML();
+document.getElementById(‘content’).innerHTML=html;
 }
 
-ReactDOM.createRoot(document.getElementById(“root”)).render(<App/>);
+render();
 </script>
 
 </body>

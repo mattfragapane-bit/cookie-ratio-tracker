@@ -104,319 +104,309 @@ textarea{width:100%;min-height:80px;border:1px solid #ddd5c5;border-radius:3px;p
 </div>
 <div class="content" id="content"></div>
 </div>
-
 <script>
-// ── Data ──────────────────────────────────────────────────────────────────────
-const ACCENT='#8b4513',ACCENT_LIGHT='#d4956a',GOOD='#5a7a4a',WARN='#c17f24',ALERT='#9b3a2a',WARM_MID='#c8b99a',PARCHMENT='#f5f0e8';
-const COMPARE_COLORS=[ACCENT_LIGHT,'#6b8b6b','#c8a44a','#8b6b3a','#a0714a','#4a3020'];
+var ACCENT='#8b4513',ACCENT_LIGHT='#d4956a',GOOD='#5a7a4a',WARN='#c17f24',ALERT='#9b3a2a',WARM_MID='#c8b99a',PARCHMENT='#f5f0e8';
+var COMPARE_COLORS=[ACCENT_LIGHT,'#6b8b6b','#c8a44a','#8b6b3a','#a0714a','#4a3020'];
 
-const RATIOS=[
-  {key:'fat',label:'Fat',name:'Butter to Flour',color:ACCENT_LIGHT,max:100,t:[20,50,80,95],m:[40,65,80],ml:['lean','classic','rich'],desc:'Controls spread, richness, and chew. Higher fat = thinner, crispier, more flavourful. Lower fat = thicker, cakier, more structured.'},
-  {key:'sugar',label:'Sugar',name:'Total Sugar to Flour',color:'#c8a44a',max:120,t:[20,55,90,110],m:[40,65,90],ml:['mild','classic','sweet'],desc:'Drives sweetness, spread, and browning. Very high sugar = thin, lacey, crispy. Brown sugar adds moisture; white encourages spread and snap.'},
-  {key:'brown',label:'Brown Sugar',name:'Brown vs White Split',color:'#a0714a',max:100,t:[10,40,75,90],m:[33,60,80],ml:['crunchy','balanced','chewy'],desc:'Brown sugar retains moisture for chew and caramel notes. White promotes spread and crunch.'},
-  {key:'egg',label:'Egg',name:'Eggs to Flour',color:'#8b6b3a',max:80,t:[15,30,55,70],m:[25,45,65],ml:['lean','standard','rich'],desc:'Whites provide structure; yolks provide richness. Extra yolks = fudgy, dense. High whites = puffier, more cakey.'},
-  {key:'bicarb',label:'Baking Soda',name:'Baking Soda to Flour',color:'#6b8b6b',max:3,t:[0.3,0.8,1.4,2.0],m:[25,55,80],ml:['low','ideal','high'],desc:'Needs an acid to activate (brown sugar, cream, buttermilk). Drives Maillard browning, spread, and crispier edges. Too much = soapy off-notes.'},
-  {key:'bpowder',label:'Baking Powder',name:'Baking Powder to Flour',color:'#8b9b6b',max:3,t:[0.2,0.6,1.2,1.8],m:[20,50,75],ml:['low','typical','high'],desc:'Self-contained leavener (acid + base). Gives a cleaner, more neutral lift. Promotes height over spread. More common in cakey-style cookies.'},
-  {key:'choc',label:'Chocolate',name:'Chocolate to Flour',color:'#4a3020',max:160,t:[10,50,120,150],m:[30,55,80],ml:['light','generous','loaded'],desc:'Higher ratios produce pooling chocolate. Very high loads (120%+) make chocolate structural, not just a mix-in.'},
+var RATIOS=[
+{key:‘fat’,label:‘Fat’,name:‘Butter to Flour’,color:ACCENT_LIGHT,max:100,t:[20,50,80,95],m:[40,65,80],ml:[‘lean’,‘classic’,‘rich’],desc:‘Controls spread, richness, and chew. Higher fat = thinner, crispier, more flavourful. Lower fat = thicker, cakier, more structured.’},
+{key:‘sugar’,label:‘Sugar’,name:‘Total Sugar to Flour’,color:’#c8a44a’,max:120,t:[20,55,90,110],m:[40,65,90],ml:[‘mild’,‘classic’,‘sweet’],desc:‘Drives sweetness, spread, and browning. Very high sugar = thin, lacey, crispy. Brown sugar adds moisture; white encourages spread and snap.’},
+{key:‘brown’,label:‘Brown Sugar’,name:‘Brown vs White Split’,color:’#a0714a’,max:100,t:[10,40,75,90],m:[33,60,80],ml:[‘crunchy’,‘balanced’,‘chewy’],desc:‘Brown sugar retains moisture for chew and caramel notes. White promotes spread and crunch.’},
+{key:‘egg’,label:‘Egg’,name:‘Eggs to Flour’,color:’#8b6b3a’,max:80,t:[15,30,55,70],m:[25,45,65],ml:[‘lean’,‘standard’,‘rich’],desc:‘Whites provide structure; yolks provide richness. Extra yolks = fudgy, dense. High whites = puffier, more cakey.’},
+{key:‘bicarb’,label:‘Baking Soda’,name:‘Baking Soda to Flour’,color:’#6b8b6b’,max:3,t:[0.3,0.8,1.4,2.0],m:[25,55,80],ml:[‘low’,‘ideal’,‘high’],desc:‘Needs an acid to activate (brown sugar, cream, buttermilk). Drives Maillard browning, spread, and crispier edges. Too much = soapy off-notes.’},
+{key:‘bpowder’,label:‘Baking Powder’,name:‘Baking Powder to Flour’,color:’#8b9b6b’,max:3,t:[0.2,0.6,1.2,1.8],m:[20,50,75],ml:[‘low’,‘typical’,‘high’],desc:‘Self-contained leavener (acid + base). Gives a cleaner, more neutral lift. Promotes height over spread. More common in cakey-style cookies.’},
+{key:‘choc’,label:‘Chocolate’,name:‘Chocolate to Flour’,color:’#4a3020’,max:160,t:[10,50,120,150],m:[30,55,80],ml:[‘light’,‘generous’,‘loaded’],desc:‘Higher ratios produce pooling chocolate. Very high loads (120%+) make chocolate structural, not just a mix-in.’}
 ];
 
-const EMPTY={flour:'',butter:'',brownSugar:'',whiteSugar:'',eggs:'',yolks:'',choc:'',bicarb:'',bicarbUnit:'tsp',bakingPowder:'',bakingPowderUnit:'tsp',salt:'',saltUnit:'tsp',cream:''};
-const TSP_G={bicarb:6,bakingPowder:4,salt:6};
+var EMPTY={flour:’’,butter:’’,brownSugar:’’,whiteSugar:’’,eggs:’’,yolks:’’,choc:’’,bicarb:’’,bicarbUnit:‘tsp’,bakingPowder:’’,bakingPowderUnit:‘tsp’,salt:’’,saltUnit:‘tsp’,cream:’’};
+var TSP_G={bicarb:6,bakingPowder:4,salt:6};
 
-// ── State ─────────────────────────────────────────────────────────────────────
-let view='editor', recipes=[], fields={...EMPTY}, recipeName='', recipeNotes='', editingId=null, compareIds=[], saved=false, showTransfer=false, transferText='', transferMsg='';
+var view=‘editor’, recipes=[], fields=obj(EMPTY), recipeName=’’, recipeNotes=’’, editingId=null, compareIds=[], saved=false, showTransfer=false, transferText=’’, transferMsg=’’;
 
-try{const s=localStorage.getItem('cct-recipes');if(s)recipes=JSON.parse(s);}catch(e){}
+function obj(o){return JSON.parse(JSON.stringify(o));}
+try{var s=localStorage.getItem(‘cct-recipes’);if(s)recipes=JSON.parse(s);}catch(e){}
+function store(r){try{localStorage.setItem(‘cct-recipes’,JSON.stringify(r));}catch(e){}}
 
-function save(r){try{localStorage.setItem('cct-recipes',JSON.stringify(r));}catch(e){}}
-
-// ── Calculations ──────────────────────────────────────────────────────────────
-function toG(v,u,k){if(u==='tsp')return v*TSP_G[k];if(u==='tbsp')return v*TSP_G[k]*3;return v;}
-function n(k){const v=parseFloat(fields[k]);return isNaN(v)||v<0?0:v;}
-function nf(f,k){const v=parseFloat((f||{})[k]);return isNaN(v)||v<0?0:v;}
+function toG(v,u,k){if(u===‘tsp’)return v*TSP_G[k];if(u===‘tbsp’)return v*TSP_G[k]*3;return v;}
+function nf(f,k){var v=parseFloat((f||{})[k]);return isNaN(v)||v<0?0:v;}
 function pct(a,b){return b?(a/b)*100:null;}
 
 function calc(f){
-  const flour=nf(f,'flour'),butter=nf(f,'butter'),bs=nf(f,'brownSugar'),ws=nf(f,'whiteSugar');
-  const eggs=nf(f,'eggs'),yolks=nf(f,'yolks'),choc=nf(f,'choc'),cream=nf(f,'cream');
-  const bicarbU=f.bicarbUnit||'tsp',bpU=f.bakingPowderUnit||'tsp',saltU=f.saltUnit||'tsp';
-  const bicarbG=toG(nf(f,'bicarb'),bicarbU,'bicarb');
-  const bpG=toG(nf(f,'bakingPowder'),bpU,'bakingPowder');
-  const saltG=toG(nf(f,'salt'),saltU,'salt');
-  const totalSugar=bs+ws,totalEgg=eggs*50+yolks*18,leavenG=bicarbG+bpG;
-  return{flour,butter,totalSugar,totalEgg,leavenG,saltG,bicarbG,bpG,choc,cream,
-    fat:pct(butter,flour),sugar:pct(totalSugar,flour),
-    brown:totalSugar>0?pct(bs,totalSugar):null,
-    egg:pct(totalEgg,flour),bicarb:pct(bicarbG,flour),bpowder:pct(bpG,flour),
-    chocPct:pct(choc,flour),hasExtraYolks:yolks>0};
+var flour=nf(f,‘flour’),butter=nf(f,‘butter’),bs=nf(f,‘brownSugar’),ws=nf(f,‘whiteSugar’);
+var eggs=nf(f,‘eggs’),yolks=nf(f,‘yolks’),choc=nf(f,‘choc’),cream=nf(f,‘cream’);
+var bicarbU=f.bicarbUnit||‘tsp’,bpU=f.bakingPowderUnit||‘tsp’,saltU=f.saltUnit||‘tsp’;
+var bicarbG=toG(nf(f,‘bicarb’),bicarbU,‘bicarb’);
+var bpG=toG(nf(f,‘bakingPowder’),bpU,‘bakingPowder’);
+var saltG=toG(nf(f,‘salt’),saltU,‘salt’);
+var totalSugar=bs+ws,totalEgg=eggs*50+yolks*18,leavenG=bicarbG+bpG;
+return {flour:flour,butter:butter,totalSugar:totalSugar,totalEgg:totalEgg,leavenG:leavenG,saltG:saltG,bicarbG:bicarbG,bpG:bpG,choc:choc,cream:cream,
+fat:pct(butter,flour),sugar:pct(totalSugar,flour),
+brown:totalSugar>0?pct(bs,totalSugar):null,
+egg:pct(totalEgg,flour),bicarb:pct(bicarbG,flour),bpowder:pct(bpG,flour),
+chocPct:pct(choc,flour),hasExtraYolks:yolks>0};
 }
 
 function getStatus(v,t){
-  if(v===null)return{label:'—',color:WARM_MID,bg:PARCHMENT};
-  if(v<t[0])return{label:'Low',color:ALERT,bg:'rgba(155,58,42,0.1)'};
-  if(v<t[1])return{label:'Below typical',color:ALERT,bg:'rgba(155,58,42,0.1)'};
-  if(v<=t[2])return{label:'Typical range',color:GOOD,bg:'rgba(90,122,74,0.1)'};
-  if(v<=t[3])return{label:'Above typical',color:WARN,bg:'rgba(193,127,36,0.1)'};
-  return{label:'High',color:WARN,bg:'rgba(193,127,36,0.1)'};
+if(v===null)return {label:’–’,color:WARM_MID,bg:PARCHMENT};
+if(v<t[0])return {label:‘Low’,color:ALERT,bg:‘rgba(155,58,42,0.1)’};
+if(v<t[1])return {label:‘Below typical’,color:ALERT,bg:‘rgba(155,58,42,0.1)’};
+if(v<=t[2])return {label:‘Typical range’,color:GOOD,bg:‘rgba(90,122,74,0.1)’};
+if(v<=t[3])return {label:‘Above typical’,color:WARN,bg:‘rgba(193,127,36,0.1)’};
+return {label:‘High’,color:WARN,bg:‘rgba(193,127,36,0.1)’};
 }
 
 function getProfile(r){
-  if(!r.fat)return'—';
-  if(r.fat>=70&&r.brown>=60&&r.egg>=40)return'Fudgy';
-  if(r.fat<=55&&r.sugar>=80)return'Crispy';
-  if(r.fat>=65&&r.brown>=55)return'Chewy';
-  if(r.fat<=55&&r.egg>=55)return'Cakey';
-  return'Balanced';
+if(!r.fat)return ‘–’;
+if(r.fat>=70&&r.brown>=60&&r.egg>=40)return ‘Fudgy’;
+if(r.fat<=55&&r.sugar>=80)return ‘Crispy’;
+if(r.fat>=65&&r.brown>=55)return ‘Chewy’;
+if(r.fat<=55&&r.egg>=55)return ‘Cakey’;
+return ‘Balanced’;
 }
 
 function buildProfile(r){
-  if(!r.flour)return'<p class="profile-empty">Enter ingredient weights above to generate a profile reading.</p>';
-  const lines=[];
-  const{fat,brown,egg,bicarbG,bpG}=r;
-  if(fat>=75)lines.push('<strong>Very rich fat ('+fat.toFixed(0)+'%)</strong> — generously buttery, significant spread, thin crispy edges.');
-  else if(fat>=55)lines.push('<strong>Classic fat ('+fat.toFixed(0)+'%)</strong> — sweet spot for spread and chewy-crisp edges.');
-  else if(fat)lines.push('<strong>Lean fat ('+fat.toFixed(0)+'%)</strong> — less spread, thicker and more structured.');
-  if(brown!==null){
-    if(brown>=70)lines.push('<strong>Brown sugar dominant ('+brown.toFixed(0)+'%)</strong> — deep caramel flavour, chewy moist interior.');
-    else if(brown>=45)lines.push('<strong>Balanced sugar split ('+brown.toFixed(0)+'% brown)</strong> — depth from molasses, snap from white sugar.');
-    else if(brown!==null)lines.push('<strong>White sugar dominant ('+(100-brown).toFixed(0)+'% white)</strong> — more spread, crunch, cleaner flavour.');
-  }
-  if(r.hasExtraYolks)lines.push('<strong>Extra yolks</strong> — fudgy, dense, richer golden colour.');
-  else if(egg>=55)lines.push('<strong>High egg ('+egg.toFixed(0)+'%)</strong> — puffier, more cakey structure.');
-  else if(egg>=35)lines.push('<strong>Standard egg ('+egg.toFixed(0)+'%)</strong> — balanced moisture and binding.');
-  if(bicarbG>0&&bpG>0)lines.push('<strong>Dual leavening</strong> — bicarb drives browning and spread; baking powder adds neutral lift. Chewy-edged with some rise.');
-  else if(bicarbG>0){
-    if(r.bicarb>1.4)lines.push('<strong>High bicarb ('+r.bicarb.toFixed(1)+'%)</strong> — very active browning; watch for soapy off-notes.');
-    else if(r.bicarb>=0.8)lines.push('<strong>Bicarb in range ('+r.bicarb.toFixed(1)+'%)</strong> — good Maillard browning, crispier edges.');
-    else lines.push('<strong>Low bicarb ('+r.bicarb.toFixed(1)+'%)</strong> — minimal browning boost; denser result.');
-  }else if(bpG>0)lines.push('<strong>Baking powder only ('+r.bpowder.toFixed(1)+'%)</strong> — neutral lift, puffier more cakey texture.');
-  if(r.chocPct>=110)lines.push('<strong>Heavy chocolate ('+r.chocPct.toFixed(0)+'%)</strong> — bakery-style, chocolate pools dominate.');
-  else if(r.chocPct>=70)lines.push('<strong>Generous chocolate ('+r.chocPct.toFixed(0)+'%)</strong> — every bite covered, well-balanced.');
-  else if(r.chocPct>0)lines.push('<strong>Moderate chocolate ('+r.chocPct.toFixed(0)+'%)</strong> — dough flavour remains prominent.');
-  return lines.map(l=>'<p>'+l+'</p>').join('');
+if(!r.flour)return ‘<p class="profile-empty">Enter ingredient weights above to generate a profile reading.</p>’;
+var lines=[];
+var fat=r.fat,brown=r.brown,egg=r.egg,bicarbG=r.bicarbG,bpG=r.bpG;
+if(fat>=75)lines.push(’<strong>Very rich fat (’+fat.toFixed(0)+’%)</strong> - generously buttery, significant spread, thin crispy edges.’);
+else if(fat>=55)lines.push(’<strong>Classic fat (’+fat.toFixed(0)+’%)</strong> - sweet spot for spread and chewy-crisp edges.’);
+else if(fat)lines.push(’<strong>Lean fat (’+fat.toFixed(0)+’%)</strong> - less spread, thicker and more structured.’);
+if(brown!==null){
+if(brown>=70)lines.push(’<strong>Brown sugar dominant (’+brown.toFixed(0)+’%)</strong> - deep caramel flavour, chewy moist interior.’);
+else if(brown>=45)lines.push(’<strong>Balanced sugar split (’+brown.toFixed(0)+’% brown)</strong> - depth from molasses, snap from white sugar.’);
+else lines.push(’<strong>White sugar dominant (’+(100-brown).toFixed(0)+’% white)</strong> - more spread, crunch, cleaner flavour.’);
+}
+if(r.hasExtraYolks)lines.push(’<strong>Extra yolks</strong> - fudgy, dense, richer golden colour.’);
+else if(egg>=55)lines.push(’<strong>High egg (’+egg.toFixed(0)+’%)</strong> - puffier, more cakey structure.’);
+else if(egg>=35)lines.push(’<strong>Standard egg (’+egg.toFixed(0)+’%)</strong> - balanced moisture and binding.’);
+if(bicarbG>0&&bpG>0)lines.push(’<strong>Dual leavening</strong> - bicarb drives browning and spread; baking powder adds neutral lift.’);
+else if(bicarbG>0){
+if(r.bicarb>1.4)lines.push(’<strong>High bicarb (’+r.bicarb.toFixed(1)+’%)</strong> - very active browning; watch for soapy off-notes.’);
+else if(r.bicarb>=0.8)lines.push(’<strong>Bicarb in range (’+r.bicarb.toFixed(1)+’%)</strong> - good Maillard browning, crispier edges.’);
+else lines.push(’<strong>Low bicarb (’+r.bicarb.toFixed(1)+’%)</strong> - minimal browning boost; denser result.’);
+}else if(bpG>0)lines.push(’<strong>Baking powder only (’+r.bpowder.toFixed(1)+’%)</strong> - neutral lift, puffier more cakey texture.’);
+if(r.chocPct>=110)lines.push(’<strong>Heavy chocolate (’+r.chocPct.toFixed(0)+’%)</strong> - bakery-style, chocolate pools dominate.’);
+else if(r.chocPct>=70)lines.push(’<strong>Generous chocolate (’+r.chocPct.toFixed(0)+’%)</strong> - every bite covered, well-balanced.’);
+else if(r.chocPct>0)lines.push(’<strong>Moderate chocolate (’+r.chocPct.toFixed(0)+’%)</strong> - dough flavour remains prominent.’);
+return lines.map(function(l){return ‘<p>’+l+’</p>’;}).join(’’);
 }
 
-// ── HTML builders ─────────────────────────────────────────────────────────────
+function esc(s){return String(s||’’).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’"’);}
+
 function numInput(id,label,hint,placeholder,unit,step){
-  const u=unit||(id==='eggs'||id==='yolks'?'ct':'g');
-  return `<div class="field">
-    <label>${label}${hint?'<span>'+hint+'</span>':''}</label>
-    <div class="input-wrap">
-      <input type="number" min="0" step="${step||1}" placeholder="${placeholder}" value="${fields[id]||''}" oninput="setField('${id}',this.value)">
-      <span class="unit">${u}</span>
-    </div>
-  </div>`;
+var u=unit||(id===‘eggs’||id===‘yolks’?‘ct’:‘g’);
+var val=fields[id]||’’;
+return ‘<div class="field"><label>’+label+(hint?’<span>’+hint+’</span>’:’’)+’</label>’
++’<div class="input-wrap"><input type="number" min="0" step="'+(step||1)+'" placeholder="'+placeholder+'" value="'+esc(val)+'" oninput="sf(\''+id+'\',this.value)">’
++’<span class="unit">’+u+’</span></div></div>’;
 }
 
 function smallInput(id,unitId,label){
-  const u=fields[unitId]||'tsp';
-  return `<div class="field">
-    <label>${label}</label>
-    <div class="input-wrap">
-      <input type="number" min="0" step="0.25" placeholder="${u==='g'?'4':'1'}" value="${fields[id]||''}" oninput="setField('${id}',this.value)">
-      <select onchange="setField('${unitId}',this.value)">
-        <option value="tsp"${u==='tsp'?' selected':''}>tsp</option>
-        <option value="tbsp"${u==='tbsp'?' selected':''}>tbsp</option>
-        <option value="g"${u==='g'?' selected':''}>g</option>
-      </select>
-    </div>
-  </div>`;
+var u=fields[unitId]||‘tsp’;
+var val=fields[id]||’’;
+var ph=u===‘g’?‘4’:‘1’;
+return ‘<div class="field"><label>’+label+’</label>’
++’<div class="input-wrap"><input type="number" min="0" step="0.25" placeholder="'+ph+'" value="'+esc(val)+'" oninput="sf(\''+id+'\',this.value)">’
++’<select onchange="sf(\''+unitId+'\',this.value)">’
++’<option value=“tsp”’+(u===‘tsp’?’ selected’:’’)+’>tsp</option>’
++’<option value=“tbsp”’+(u===‘tbsp’?’ selected’:’’)+’>tbsp</option>’
++’<option value=“g”’+(u===‘g’?’ selected’:’’)+’>g</option>’
++’</select></div></div>’;
 }
 
 function ratioBar(r,cfg){
-  const val=r[cfg.key];
-  const barW=val!==null?Math.min(100,(val/cfg.max)*100):0;
-  const st=getStatus(val,cfg.t);
-  const valStr=val!==null?val.toFixed(1):'—';
-  return `<div class="ratio-card">
-    <div class="ratio-head">
-      <div><div class="ratio-label">${cfg.label}</div><div class="ratio-name">${cfg.name}</div></div>
-      <div class="ratio-val">${valStr}<span>%</span></div>
-    </div>
-    <div class="ratio-desc">${cfg.desc}</div>
-    <div class="bar-wrap">
-      <div class="bar-track"><div class="bar-fill" style="width:${barW}%;background:${cfg.color}"></div></div>
-      ${cfg.m.map(m=>`<div class="bar-marker" style="left:${m}%"></div>`).join('')}
-    </div>
-    <div class="bar-labels">${cfg.ml.map(l=>`<span>${l}</span>`).join('')}</div>
-    <span class="status-tag" style="background:${st.bg};color:${st.color}">${st.label}</span>
-  </div>`;
+var val=r[cfg.key];
+var barW=val!==null?Math.min(100,(val/cfg.max)*100):0;
+var st=getStatus(val,cfg.t);
+var valStr=val!==null?val.toFixed(1):’–’;
+var markers=cfg.m.map(function(m){return ‘<div class="bar-marker" style="left:'+m+'%"></div>’;}).join(’’);
+var mlabels=cfg.ml.map(function(l){return ‘<span>’+l+’</span>’;}).join(’’);
+return ‘<div class="ratio-card">’
++’<div class="ratio-head"><div><div class="ratio-label">’+cfg.label+’</div><div class="ratio-name">’+cfg.name+’</div></div>’
++’<div class="ratio-val">’+valStr+’<span>%</span></div></div>’
++’<div class="ratio-desc">’+cfg.desc+’</div>’
++’<div class="bar-wrap"><div class="bar-track"><div class="bar-fill" style="width:'+barW+'%;background:'+cfg.color+'"></div></div>’+markers+’</div>’
++’<div class="bar-labels">’+mlabels+’</div>’
++’<span class="status-tag" style="background:'+st.bg+';color:'+st.color+'">’+st.label+’</span>’
++’</div>’;
 }
 
-// ── Views ─────────────────────────────────────────────────────────────────────
 function editorHTML(){
-  const r=calc(fields);
-  const doughTotal=r.flour+r.butter+r.totalSugar+r.totalEgg+r.leavenG+r.saltG+r.choc+r.cream;
-  const brownPct=r.totalSugar>0?Math.round(pct(nf(fields,'brownSugar'),r.totalSugar)):null;
-  const saveBg=saved?GOOD:(recipeName.trim()?ACCENT:WARM_MID);
-  const saveTxt=saved?'✓ Saved':(editingId?'Update Recipe':'Save Recipe');
-  return `
-  <div class="card">
-    <div class="sl">Recipe Name</div>
-    <div class="input-wrap"><input type="text" placeholder="e.g. Kiley's Crinkled Brown Butter CCC" value="${escH(recipeName)}" oninput="setName(this.value)" style="flex:1;padding:0.55rem 0.65rem;border:none;background:#f5f0e8;font-family:monospace;font-size:0.82rem;color:#1a1714;outline:none;"></div>
-  </div>
-  <div class="card">
-    <div class="sl">Base Ingredients</div>
-    <div class="grid2">
-      ${numInput('flour','Flour','base = 100%','240')}
-      ${numInput('butter','Butter','fat','170')}
-      ${numInput('brownSugar','Brown Sugar','','165')}
-      ${numInput('whiteSugar','White Sugar','','100')}
-      ${numInput('eggs','Whole Eggs','count','2')}
-      ${numInput('yolks','Egg Yolks','extra, if any','0')}
-    </div>
-    <div class="mixins-sep">
-      <div class="sl">Mix-ins &amp; Leavening</div>
-      <div class="grid2b">
-        ${numInput('choc','Chocolate','','300')}
-        ${numInput('cream','Cream / Milk','optional','30','ml')}
-      </div>
-      <div class="grid3">
-        ${smallInput('bicarb','bicarbUnit','Baking Soda')}
-        ${smallInput('bakingPowder','bakingPowderUnit','Baking Powder')}
-        ${smallInput('salt','saltUnit','Salt')}
-      </div>
-    </div>
-  </div>
-  <div class="card-dark">
-    <div class="summary-item"><span class="summary-val">${doughTotal>0?Math.round(doughTotal)+'g':'—'}</span><span class="summary-label">Dough</span></div>
-    <div class="summary-item"><span class="summary-val">${brownPct!==null?brownPct+':'+(100-brownPct):'—'}</span><span class="summary-label">Sugar B:W</span></div>
-    <div class="summary-item"><span class="summary-val">${r.flour&&r.choc?Math.round(r.chocPct)+'%':'—'}</span><span class="summary-label">Choc %</span></div>
-    <div class="summary-item"><span class="summary-val">${getProfile(r)}</span><span class="summary-label">Profile</span></div>
-  </div>
-  ${RATIOS.map(cfg=>ratioBar(r,cfg)).join('')}
-  <div class="card">
-    <div class="sl">Cookie Profile</div>
-    <div class="profile-text">${buildProfile(r)}</div>
-  </div>
-  <div class="card">
-    <div class="sl">Notes</div>
-    <textarea placeholder="Technique, resting time, pan type, observations after baking..." oninput="setNotes(this.value)">${escH(recipeNotes)}</textarea>
-
-  </div>
-  <button class="save-btn" style="background:${saveBg}" onclick="saveRecipe()">${saveTxt}</button>`;
+var r=calc(fields);
+var doughTotal=r.flour+r.butter+r.totalSugar+r.totalEgg+r.leavenG+r.saltG+r.choc+r.cream;
+var brownPct=r.totalSugar>0?Math.round(pct(nf(fields,‘brownSugar’),r.totalSugar)):null;
+var saveBg=saved?GOOD:(recipeName.trim()?ACCENT:WARM_MID);
+var saveTxt=saved?‘Saved’:(editingId?‘Update Recipe’:‘Save Recipe’);
+var ratioCards=RATIOS.map(function(cfg){return ratioBar(r,cfg);}).join(’’);
+return ‘<div class="card"><div class="sl">Recipe Name</div>’
++’<div class="input-wrap"><input type="text" placeholder="e.g. Kiley\'s CCC" value="'+esc(recipeName)+'" oninput="sn(this.value)" style="flex:1;padding:0.55rem 0.65rem;border:none;background:#f5f0e8;font-family:monospace;font-size:0.82rem;color:#1a1714;outline:none;"></div></div>’
++’<div class="card"><div class="sl">Base Ingredients</div>’
++’<div class="grid2">’
++numInput(‘flour’,‘Flour’,‘base = 100%’,‘240’)
++numInput(‘butter’,‘Butter’,‘fat’,‘170’)
++numInput(‘brownSugar’,‘Brown Sugar’,’’,‘165’)
++numInput(‘whiteSugar’,‘White Sugar’,’’,‘100’)
++numInput(‘eggs’,‘Whole Eggs’,‘count’,‘2’)
++numInput(‘yolks’,‘Egg Yolks’,‘extra, if any’,‘0’)
++’</div>’
++’<div class="mixins-sep"><div class="sl">Mix-ins & Leavening</div>’
++’<div class="grid2b">’+numInput(‘choc’,‘Chocolate’,’’,‘300’)+numInput(‘cream’,‘Cream / Milk’,‘optional’,‘30’,‘ml’)+’</div>’
++’<div class="grid3">’+smallInput(‘bicarb’,‘bicarbUnit’,‘Baking Soda’)+smallInput(‘bakingPowder’,‘bakingPowderUnit’,‘Baking Powder’)+smallInput(‘salt’,‘saltUnit’,‘Salt’)+’</div>’
++’</div></div>’
++’<div class="card-dark">’
++’<div class="summary-item"><span class="summary-val">’+(doughTotal>0?Math.round(doughTotal)+‘g’:’–’)+’</span><span class="summary-label">Dough</span></div>’
++’<div class="summary-item"><span class="summary-val">’+(brownPct!==null?brownPct+’:’+(100-brownPct):’–’)+’</span><span class="summary-label">Sugar B:W</span></div>’
++’<div class="summary-item"><span class="summary-val">’+(r.flour&&r.choc?Math.round(r.chocPct)+’%’:’–’)+’</span><span class="summary-label">Choc %</span></div>’
++’<div class="summary-item"><span class="summary-val">’+getProfile(r)+’</span><span class="summary-label">Profile</span></div>’
++’</div>’
++ratioCards
++’<div class="card"><div class="sl">Cookie Profile</div><div class="profile-text">’+buildProfile(r)+’</div></div>’
++’<div class="card"><div class="sl">Notes</div><textarea placeholder="Technique, resting time, pan type..." oninput="sno(this.value)">’+esc(recipeNotes)+’</textarea></div>’
++’<button class="save-btn" style="background:'+saveBg+'" onclick="saveRecipe()">’+saveTxt+’</button>’;
 }
 
 function listHTML(){
-let html=`<button class="new-btn" onclick="newRecipe()">+ New Recipe</button>`;
-if(recipes.length===0){html+=`<div class="empty">No saved recipes yet. Enter a recipe and hit Save.</div>`;return html;}
-html+=`<div style="font-size:0.62rem;color:#7a7065;margin-bottom:0.75rem;">Tap to load · tick to compare</div>`;
-recipes.forEach(recipe=>{
-const r=calc({…EMPTY,…recipe.fields});
-const chk=compareIds.includes(recipe.id);
-const activeClass=editingId===recipe.id?’ active’:’’;
-const tags=RATIOS.slice(0,4).map(cfg=>r[cfg.key]!==null?`<span class="tag">${cfg.label} ${r[cfg.key].toFixed(0)}%</span>`:’’).join(’’);
-html+=`<div class="recipe-item${activeClass}"> <input type="checkbox" ${chk?'checked':''} onchange="toggleCompare('${recipe.id}')" style="margin-top:0.25rem;accent-color:#8b4513;flex-shrink:0;width:16px;height:16px;"> <div style="flex:1;min-width:0;cursor:pointer;" onclick="loadRecipe('${recipe.id}')"> <div style="font-family:Georgia,serif;font-size:0.95rem;color:#1a1714;">${escH(recipe.name)}</div> <div class="recipe-tags">${tags}<span class="tag profile">${getProfile(r)}</span></div> </div> <button onclick="deleteRecipe('${recipe.id}')" style="background:none;border:none;color:#c8b99a;cursor:pointer;font-size:1.1rem;padding:0 0.2rem;flex-shrink:0;line-height:1;">×</button> </div>`;
+var html=’<button class="new-btn" onclick="newRecipe()">+ New Recipe</button>’;
+if(recipes.length===0){return html+’<div class="empty">No saved recipes yet. Enter a recipe and hit Save.</div>’;}
+html+=’<div style="font-size:0.62rem;color:#7a7065;margin-bottom:0.75rem;">Tap to load - tick to compare</div>’;
+recipes.forEach(function(recipe){
+var r=calc(merge(EMPTY,recipe.fields));
+var chk=compareIds.indexOf(recipe.id)>-1;
+var ac=editingId===recipe.id?’ active’:’’;
+var tags=RATIOS.slice(0,4).map(function(cfg){
+return r[cfg.key]!==null?’<span class="tag">’+cfg.label+’ ‘+r[cfg.key].toFixed(0)+’%</span>’:’’;
+}).join(’’);
+html+=’<div class="recipe-item'+ac+'">’
++’<input type=“checkbox” ‘+(chk?‘checked’:’’)+’ onchange=“tc('’+recipe.id+’')” style=“margin-top:0.25rem;accent-color:#8b4513;flex-shrink:0;width:16px;height:16px;”>’
++’<div style="flex:1;min-width:0;cursor:pointer;" onclick="lr(\''+recipe.id+'\')">’
++’<div style="font-family:Georgia,serif;font-size:0.95rem;color:#1a1714;">’+esc(recipe.name)+’</div>’
++’<div class="recipe-tags">’+tags+’<span class="tag profile">’+getProfile(r)+’</span></div>’
++’</div>’
++’<button onclick="dr(\''+recipe.id+'\')" style="background:none;border:none;color:#c8b99a;cursor:pointer;font-size:1.1rem;padding:0 0.2rem;flex-shrink:0;line-height:1;">x</button>’
++’</div>’;
 });
-if(compareIds.length>=2)html+=`<button class="compare-btn" onclick="setView('compare')">Compare ${compareIds.length} Recipes →</button>`;
+if(compareIds.length>=2)html+=’<button class="compare-btn" onclick="sv(\'compare\')">Compare ‘+compareIds.length+’ Recipes</button>’;
 return html;
 }
 
 function compareHTML(){
-const selected=recipes.filter(r=>compareIds.includes(r.id));
-let html=`<div class="legend">${selected.map((r,i)=>`<div class="legend-item"><div class="legend-dot" style="background:${COMPARE_COLORS[i%COMPARE_COLORS.length]}"></div><span class="legend-name">${escH(r.name)}</span></div>`).join('')}</div>`;
-RATIOS.forEach(cfg=>{
-html+=`<div class="compare-card"><div style="margin-bottom:0.75rem;"><div style="font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:#8b4513;margin-bottom:0.15rem;">${cfg.label}</div><div style="font-family:Georgia,serif;font-size:0.9rem;color:#1a1714;">${cfg.name}</div></div>`;
-selected.forEach((recipe,i)=>{
-const r=calc({…EMPTY,…recipe.fields});
-const val=r[cfg.key];
-const barW=val!==null?Math.min(100,(val/cfg.max)*100):0;
-const color=COMPARE_COLORS[i%COMPARE_COLORS.length];
-html+=`<div class="compare-row"> <div class="compare-row-head"> <span class="compare-row-name"><span class="compare-dot" style="background:${color}"></span>${escH(recipe.name)}</span> <span class="compare-row-val">${val!==null?val.toFixed(1)+'%':'—'}</span> </div> <div class="compare-bar"> <div class="compare-bar-fill" style="width:${barW}%;background:${color}"></div> ${cfg.m.map(m=>`<div class="compare-marker" style="left:${m}%"></div>`).join('')} </div> </div>`;
+var selected=recipes.filter(function(r){return compareIds.indexOf(r.id)>-1;});
+var legend=selected.map(function(r,i){
+return ‘<div class="legend-item"><div class="legend-dot" style="background:'+COMPARE_COLORS[i%COMPARE_COLORS.length]+'"></div><span class="legend-name">’+esc(r.name)+’</span></div>’;
+}).join(’’);
+var html=’<div class="legend">’+legend+’</div>’;
+RATIOS.forEach(function(cfg){
+html+=’<div class="compare-card"><div style="margin-bottom:0.75rem;"><div style="font-size:0.58rem;letter-spacing:0.15em;text-transform:uppercase;color:#8b4513;margin-bottom:0.15rem;">’+cfg.label+’</div><div style="font-family:Georgia,serif;font-size:0.9rem;color:#1a1714;">’+cfg.name+’</div></div>’;
+selected.forEach(function(recipe,i){
+var r=calc(merge(EMPTY,recipe.fields));
+var val=r[cfg.key];
+var barW=val!==null?Math.min(100,(val/cfg.max)*100):0;
+var color=COMPARE_COLORS[i%COMPARE_COLORS.length];
+var markers=cfg.m.map(function(m){return ‘<div class="compare-marker" style="left:'+m+'%"></div>’;}).join(’’);
+html+=’<div class="compare-row">’
++’<div class="compare-row-head">’
++’<span class="compare-row-name"><span class="compare-dot" style="background:'+color+'"></span>’+esc(recipe.name)+’</span>’
++’<span class="compare-row-val">’+(val!==null?val.toFixed(1)+’%’:’–’)+’</span>’
++’</div>’
++’<div class="compare-bar"><div class="compare-bar-fill" style="width:'+barW+'%;background:'+color+'"></div>’+markers+’</div>’
++’</div>’;
 });
-html+=`<div style="display:flex;justify-content:space-between;font-size:0.52rem;color:#c8b99a;margin-top:0.35rem;">${cfg.ml.map(l=>`<span>${l}</span>`).join('')}</div></div>`;
+var mlabels=cfg.ml.map(function(l){return ‘<span>’+l+’</span>’;}).join(’’);
+html+=’<div style="display:flex;justify-content:space-between;font-size:0.52rem;color:#c8b99a;margin-top:0.35rem;">’+mlabels+’</div></div>’;
 });
-// Profile summary
-html+=`<div class="card"><div class="sl">Profile Summary</div>`;
-selected.forEach((recipe,i)=>{
-const r=calc({…EMPTY,…recipe.fields});
-const color=COMPARE_COLORS[i%COMPARE_COLORS.length];
-const sep=i<selected.length-1?‘border-bottom:1px dashed #ddd5c5;margin-bottom:0.75rem;padding-bottom:0.75rem;’:’’;
-html+=`<div style="display:flex;align-items:center;gap:0.75rem;${sep}"> <div style="width:10px;height:10px;border-radius:2px;background:${color};flex-shrink:0;"></div> <div> <div style="font-size:0.7rem;color:#1a1714;font-family:Georgia,serif;margin-bottom:0.2rem;">${escH(recipe.name)}</div> <div style="font-size:0.6rem;color:#7a7065;">${getProfile(r)} · Fat ${r.fat?r.fat.toFixed(0):'—'}% · Sugar ${r.sugar?r.sugar.toFixed(0):'—'}% · Choc ${r.chocPct?r.chocPct.toFixed(0):'—'}%</div> </div> </div>`;
+html+=’<div class="card"><div class="sl">Profile Summary</div>’;
+selected.forEach(function(recipe,i){
+var r=calc(merge(EMPTY,recipe.fields));
+var color=COMPARE_COLORS[i%COMPARE_COLORS.length];
+var sep=i<selected.length-1?‘border-bottom:1px dashed #ddd5c5;margin-bottom:0.75rem;padding-bottom:0.75rem;’:’’;
+html+=’<div style="display:flex;align-items:center;gap:0.75rem;'+sep+'">’
++’<div style="width:10px;height:10px;border-radius:2px;background:'+color+';flex-shrink:0;"></div>’
++’<div><div style="font-size:0.7rem;color:#1a1714;font-family:Georgia,serif;margin-bottom:0.2rem;">’+esc(recipe.name)+’</div>’
++’<div style="font-size:0.6rem;color:#7a7065;">’+getProfile(r)+’ - Fat ‘+(r.fat?r.fat.toFixed(0):’–’)+’% - Sugar ‘+(r.sugar?r.sugar.toFixed(0):’–’)+’% - Choc ‘+(r.chocPct?r.chocPct.toFixed(0):’–’)+’%</div>’
++’</div></div>’;
 });
-html+=`</div>`;
+html+=’</div>’;
 return html;
 }
 
 function transferHTML(){
-return `<div class="transfer-panel"> <div style="font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:#8b4513;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;"> <span>Export / Import Recipes</span> <button onclick="toggleTransfer()" style="background:none;border:none;color:#c8b99a;cursor:pointer;font-size:1rem;line-height:1;">×</button> </div> <div class="transfer-btns"> <button class="transfer-export" onclick="exportRecipes()">Export</button> <button class="transfer-import" style="background:${transferText.trim()?ACCENT:WARM_MID};cursor:${transferText.trim()?'pointer':'not-allowed'}" onclick="importRecipes()">Import</button> </div> <textarea class="transfer-textarea" placeholder="Paste exported recipe data here to import..." oninput="transferText=this.value;render()">${escH(transferText)}</textarea> ${transferMsg?`<div class="transfer-msg">${escH(transferMsg)}</div>`:’’}
-
-  </div>`;
+var importBg=transferText.trim()?ACCENT:WARM_MID;
+var importCursor=transferText.trim()?‘pointer’:‘not-allowed’;
+return ‘<div class="transfer-panel">’
++’<div style="font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:#8b4513;margin-bottom:1rem;display:flex;justify-content:space-between;align-items:center;">’
++’<span>Export / Import Recipes</span>’
++’<button onclick="toggleTransfer()" style="background:none;border:none;color:#c8b99a;cursor:pointer;font-size:1rem;line-height:1;">x</button></div>’
++’<div class="transfer-btns">’
++’<button class="transfer-export" onclick="exportRecipes()">Export</button>’
++’<button class="transfer-import" style="background:'+importBg+';cursor:'+importCursor+'" onclick="importRecipes()">Import</button>’
++’</div>’
++’<textarea class="transfer-textarea" placeholder="Paste exported recipe data here to import..." oninput="transferText=this.value;render()">’+esc(transferText)+’</textarea>’
++(transferMsg?’<div class="transfer-msg">’+esc(transferMsg)+’</div>’:’’)
++’</div>’;
 }
 
-// ── Actions ───────────────────────────────────────────────────────────────────
-function escH(s){return String(s||’’).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’"’);}
-function setField(k,v){fields[k]=v;saved=false;render();}
-function setName(v){recipeName=v;saved=false;render();}
-function setNotes(v){recipeNotes=v;}
-function setView(v){view=v;render();}
+function merge(a,b){var r=obj(a);if(b){Object.keys(b).forEach(function(k){r[k]=b[k];});}return r;}
+
+function sf(k,v){fields[k]=v;saved=false;render();}
+function sn(v){recipeName=v;saved=false;render();}
+function sno(v){recipeNotes=v;}
+function sv(v){view=v;render();}
+function tc(id){var i=compareIds.indexOf(id);if(i>-1)compareIds.splice(i,1);else compareIds.push(id);render();}
 
 function saveRecipe(){
 if(!recipeName.trim())return;
-const recipe={id:editingId||Date.now().toString(),name:recipeName.trim(),notes:recipeNotes,fields:{…fields},savedAt:Date.now()};
-recipes=editingId?recipes.map(r=>r.id===editingId?recipe:r):[…recipes,recipe];
-save(recipes);editingId=recipe.id;saved=true;render();
+var recipe={id:editingId||Date.now().toString(),name:recipeName.trim(),notes:recipeNotes,fields:obj(fields),savedAt:Date.now()};
+if(editingId){recipes=recipes.map(function(r){return r.id===editingId?recipe:r;});}else{recipes.push(recipe);}
+store(recipes);editingId=recipe.id;saved=true;render();
 }
 
-function loadRecipe(id){
-const recipe=recipes.find(r=>r.id===id);if(!recipe)return;
-fields={…EMPTY,…recipe.fields};recipeName=recipe.name;recipeNotes=recipe.notes||’’;editingId=recipe.id;saved=true;view=‘editor’;render();
+function lr(id){
+var recipe=null;recipes.forEach(function(r){if(r.id===id)recipe=r;});if(!recipe)return;
+fields=merge(EMPTY,recipe.fields);recipeName=recipe.name;recipeNotes=recipe.notes||’’;editingId=recipe.id;saved=true;view=‘editor’;render();
 }
 
-function deleteRecipe(id){
+function dr(id){
 if(!confirm(‘Delete this recipe?’))return;
-recipes=recipes.filter(r=>r.id!==id);save(recipes);
-if(editingId===id){fields={…EMPTY};recipeName=’’;recipeNotes=’’;editingId=null;saved=false;}
-compareIds=compareIds.filter(i=>i!==id);render();
+recipes=recipes.filter(function(r){return r.id!==id;});store(recipes);
+if(editingId===id){fields=obj(EMPTY);recipeName=’’;recipeNotes=’’;editingId=null;saved=false;}
+compareIds=compareIds.filter(function(i){return i!==id;});render();
 }
 
-function newRecipe(){fields={…EMPTY};recipeName=’’;recipeNotes=’’;editingId=null;saved=false;view=‘editor’;render();}
+function newRecipe(){fields=obj(EMPTY);recipeName=’’;recipeNotes=’’;editingId=null;saved=false;view=‘editor’;render();}
 
-function toggleCompare(id){
-compareIds=compareIds.includes(id)?compareIds.filter(i=>i!==id):[…compareIds,id];render();
-}
-
-function toggleTransfer(){
-showTransfer=!showTransfer;transferText=’’;transferMsg=’’;render();
-}
+function toggleTransfer(){showTransfer=!showTransfer;transferText=’’;transferMsg=’’;render();}
 
 function exportRecipes(){
 if(recipes.length===0){transferMsg=‘No recipes to export.’;render();return;}
 transferText=JSON.stringify(recipes,null,2);
-transferMsg=‘Copy all the text below, then paste it into Import on any device.’;
-render();
-// Select the textarea content
-setTimeout(()=>{const ta=document.querySelector(’.transfer-textarea’);if(ta){ta.select();}},100);
+transferMsg=‘Copy all the text below, then paste it into Import on any device.’;render();
+setTimeout(function(){var ta=document.querySelector(’.transfer-textarea’);if(ta)ta.select();},100);
 }
 
 function importRecipes(){
 try{
-const parsed=JSON.parse(transferText);
+var parsed=JSON.parse(transferText);
 if(!Array.isArray(parsed))throw new Error();
-const merged=[…recipes];
-parsed.forEach(inc=>{if(!merged.find(r=>r.id===inc.id))merged.push(inc);});
-recipes=merged;save(recipes);
-transferMsg=‘Imported ‘+parsed.length+’ recipe(s).’;transferText=’’;render();
-}catch(e){transferMsg=‘Could not read that data. Make sure you copied the full export text.’;render();}
+parsed.forEach(function(inc){if(!recipes.filter(function(r){return r.id===inc.id;}).length)recipes.push(inc);});
+store(recipes);transferMsg=‘Imported ‘+parsed.length+’ recipe(s).’;transferText=’’;render();
+}catch(e){transferMsg=‘Could not read that data.’;render();}
 }
 
-// ── Render ────────────────────────────────────────────────────────────────────
 function render(){
-// Tabs
-const tabDefs=[
+var tabDefs=[
 {id:‘editor’,label:editingId?‘Edit’:‘New’,disabled:false},
 {id:‘list’,label:recipes.length>0?‘Recipes (’+recipes.length+’)’:‘Recipes’,disabled:false},
-{id:‘compare’,label:compareIds.length>0?‘Compare (’+compareIds.length+’)’:‘Compare’,disabled:compareIds.length<2},
+{id:‘compare’,label:compareIds.length>0?‘Compare (’+compareIds.length+’)’:‘Compare’,disabled:compareIds.length<2}
 ];
-document.getElementById(‘tabs’).innerHTML=tabDefs.map(t=>`<button class="tab${view===t.id?' active':''}" ${t.disabled?'disabled':''} onclick="setView('${t.id}')">${t.label}</button>`).join(’’);
+document.getElementById(‘tabs’).innerHTML=tabDefs.map(function(t){
+return ‘<button class=“tab’+(view===t.id?’ active’:’’)+’” ‘+(t.disabled?‘disabled’:’’)+’ onclick=“sv('’+t.id+’')”>’+(t.label)+’</button>’;
+}).join(’’);
 
-// Transfer toggle
-const tl=document.getElementById(‘transferToggle’);
+var tl=document.getElementById(‘transferToggle’);
 tl.textContent=showTransfer?‘Hide Export / Import’:‘Export / Import recipes’;
 tl.className=‘transfer-link’+(showTransfer?’ active’:’’);
 
-// Content
-let html=showTransfer?transferHTML():’’;
+var html=showTransfer?transferHTML():’’;
 if(view===‘editor’)html+=editorHTML();
 else if(view===‘list’)html+=listHTML();
 else if(view===‘compare’)html+=compareHTML();
